@@ -285,7 +285,7 @@ function switchTab(tabId) {
 
 // ================= XỬ LÝ QUẢNG CÁO NGUỒN 1 & NGUỒN 2 =================
 
-const AdController = window.Adsgram.init({ blockId: "35447" });
+const AdController = window.Adsgram.init({ blockId: "37740" });
 const watchAdBtn = document.getElementById("btn-watch-ad");
 
 function showRewardAd() {
