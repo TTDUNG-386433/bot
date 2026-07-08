@@ -28,6 +28,11 @@
                     <li><span class="label-text"><i class="fa-solid fa-medal"></i> Cấp độ:</span> <span id="user-level" class="val">Lv 20</span></li>
                     <li><span class="label-text"><i class="fa-solid fa-star"></i> EXP:</span> <span id="user-exp" class="val">MAX LEVEL</span></li>
                 </ul>
+                <p id="upgrade-cost-alert" style="display:none; color:#facc15; font-size:12px; margin-top:12px; font-weight:bold; text-align:center;"></p>
+
+                <button id="btn-upgrade-level" class="btn-mint" style="display: none; margin-top: 8px; font-size: 14px; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                    <i class="fa-solid fa-level-up-alt fa-bounce"></i> NÂNG CẤP LÊN LV <span id="next-level-display"></span>
+                </button>
             </div>
 
             <div class="card">
@@ -35,12 +40,16 @@
                 <ul class="info-list">
                     <li><span class="label-text"><i class="fa-solid fa-gauge-high"></i> Tốc độ:</span> <span id="mining-speed" class="val">0 Xu/giờ</span></li>
                     <li><span class="label-text"><i class="fa-solid fa-clock"></i> Thời gian còn lại:</span> <span id="mining-time" class="val time-stopped">00:00:00 (Đang dừng)</span></li>
+                    <li><span class="label-text"><i class="fa-solid fa-bolt" style="color:#facc15;"></i> Thẻ x2 Đào:</span> <span id="buff-time" class="val" style="color: var(--text-muted); font-size: 13px;">Chưa kích hoạt</span></li>
                 </ul>
-                <button id="btn-activate-mining" class="btn-primary"><i class="fa-solid fa-gift"></i> KÍCH HOẠT ĐÀO FREE (4H)</button>
+                <button id="btn-activate-mining" class="btn-primary"><i class="fa-solid fa-gift"></i> KÍCH HOẠT ĐÀO </button>
             </div>
 
             <div class="balance-box">
                 <i class="fa-solid fa-wallet" style="margin-right: 6px;"></i> SỐ DƯ: <span id="xu-balance">1,250,000</span> Xu (~<span id="vnd-balance">12,500</span> VNĐ)
+                <div style="font-size: 11px; color: var(--color-orange); margin-top: 8px; font-weight: 600;">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Yêu cầu đạt Lv 5 để mở khóa lệnh rút tiền
+                </div>
             </div>
 
             <div class="guide-box">
@@ -48,7 +57,7 @@
                 <p>🚀 Chào mừng đến với hệ thống đào xu! Quy tắc hoạt động rất đơn giản:</p>
                 <ul>
                     <li><i class="fa-solid fa-arrow-trend-up"></i> <b>Cấp độ càng cao</b>, tốc độ đào xu tự động của máy càng nhanh.</li>
-                    <li><i class="fa-solid fa-bolt"></i> Để có EXP lên cấp, ông <b>bắt buộc</b> phải làm nhiệm vụ: <b>Vượt Link</b> hoặc <b>Xem Video Quảng Cáo</b>.</li>
+                    <li><i class="fa-solid fa-bolt"></i> Để có EXP lên cấp, bạn <b>bắt buộc</b> phải làm nhiệm vụ: <b>Vượt Link</b> hoặc <b>Xem Video Quảng Cáo</b>.</li>
                     <li><i class="fa-solid fa-bell"></i> Máy đào chạy tối đa 4H, nhớ canh giờ vào kích hoạt lại để không bị lãng phí nhé!</li>
                 </ul>
             </div>
@@ -59,7 +68,7 @@
             <div class="header"><i class="fa-solid fa-gamepad"></i> NHIỆM VỤ KIẾM XU</div>
             <div class="card">
                 <h3><i class="fa-solid fa-circle-dollar-to-slot"></i> NHIỆM VỤ & KIẾM THÊM</h3>
-                <button id="btn-watch-ad" class="btn-orange"><i class="fa-solid fa-tv"></i> XEM QUẢNG CÁO (+Xu Thưởng)</button>
+                <button id="btn-watch-ad" class="btn-orange"><i class="fa-solid fa-tv"></i> XEM QUẢNG CÁO (<span id="display-ads-watched">0</span>/30)</button>
                 
                 <!-- Khu vực hiển thị thẳng danh sách 10 link -->
                 <div id="task-list-container" class="task-list-container">
@@ -67,7 +76,7 @@
                 </div>
 
                 <div class="progress-box-inline" style="margin-top: 20px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 15px;">
-                    📊 Tiến độ nhiệm vụ hôm nay: <span id="task-progress" style="font-weight: bold; color: var(--color-mint);">0/10</span>
+                    📊 Tiến độ nhiệm vụ hôm nay: <span id="task-progress" style="font-weight: bold; color: var(--color-mint);">0/4</span>
                 </div>
             </div>
         </div>
@@ -84,30 +93,35 @@
                         <button id="btn-leaderboard" class="btn-gold"><i class="fa-solid fa-trophy"></i> BẢNG XẾP HẠNG</button>
                     </div>
                     <button id="btn-daily-attendance" class="btn-pink" style="margin-top: 12px;"><i class="fa-solid fa-calendar-check"></i> 📅 ĐIỂM DANH HẰNG NGÀY</button>
-                    
+                    <button id="btn-open-inventory" class="btn-purple" style="margin-top: 12px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);"><i class="fa-solid fa-box-open"></i> 📦 KHO VẬT PHẨM COIN</button>
                     <button id="btn-invite-friend" class="btn-mint" style="margin-top: 12px;"><i class="fa-solid fa-user-plus"></i> 👥 MỜI BẠN BÈ NHẬN THƯỞNG</button>
+                    <button id="btn-giftcode" class="btn-primary" style="margin-top: 12px; background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%); box-shadow: 0 4px 14px rgba(244, 63, 94, 0.3);">
+                        <i class="fa-solid fa-gift fa-bounce"></i> 🎁 NHẬP MÃ GIFT CODE
+                    </button>
                 </div>
 
                 <div id="inline-wheel-container" style="display: none; text-align: center;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                        <button id="btn-back-utils" style="width: auto; padding: 6px 12px; font-size: 13px; background: rgba(255,255,255,0.1); border-radius: 8px; box-shadow: none;"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+                    <div style="margin-bottom: 25px;">
+                        <div style="text-align: left; margin-bottom: 15px;">
+                            <button id="btn-back-utils" style="width: auto; padding: 6px 12px; font-size: 13px; background: rgba(255,255,255,0.1); border-radius: 8px; box-shadow: none;"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+                        </div>
                         <h3 style="margin-bottom: 0; color: var(--color-gold); justify-content: center;"><i class="fa-solid fa-ferris-wheel"></i> VÒNG QUAY</h3>
-                        <div style="width: 85px;"></div> </div>
+                    </div>
                     
                     <div class="wheel-container" style="transform: scale(0.9); margin-top: -20px;">
                         <div class="wheel-pointer"><i class="fa-solid fa-caret-down"></i></div>
                         <div class="wheel" id="lucky-wheel">
                             <div class="wheel-inner">
                                 <span class="prize p1">100 Xu</span>
-                                <span class="prize p2">50 EXP</span>
+                                <span class="prize p2">3 EXP</span>
                                 <span class="prize p3">200 Xu</span>
-                                <span class="prize p4">10 EXP</span>
-                                <span class="prize p5">500 Xu</span>
-                                <span class="prize p6">100 EXP</span>
-                                <span class="prize p7">50 Xu</span>
-                                <span class="prize p8">20 EXP</span>
-                                <span class="prize p9">1000 Xu</span>
-                                <span class="prize p10">200 EXP</span>
+                                <span class="prize p4">5 EXP</span>
+                                <span class="prize p5">300 Xu</span>
+                                <span class="prize p6">7 EXP</span>
+                                <span class="prize p7">400 Xu</span>
+                                <span class="prize p8">10 EXP</span>
+                                <span class="prize p9">500 Xu</span>
+                                <span class="prize p10">12 EXP</span>
                             </div>
                         </div>
                     </div>
@@ -118,12 +132,13 @@
                             <span id="display-daily-spins" style="color: var(--color-gold); font-weight: bold;">0/5</span>
                         </div>
                         <div style="margin-bottom: 8px;">
-                            <i class="fa-solid fa-bullseye" style="color: var(--color-mint);"></i> <b>Tiến độ nhận vé:</b><br>
-                            <span style="margin-left: 18px;">- Số Link đã vượt: <span id="display-links" style="color: var(--color-mint); font-weight: bold;">0</span> (1 vé/Link)</span><br>
-                            <span style="margin-left: 18px;">- Xem Quảng cáo: <span id="display-ads" style="color: var(--color-mint); font-weight: bold;">0</span>/3 (1 vé/3 lần)</span>
+                            <i class="fa-solid fa-bullseye" style="color: var(--color-mint);"></i> <b>Số vé đang có:</b><br>
+                            <span style="margin-left: 18px;">- Vé VIP (Mời bạn): <span id="display-extra-spins" style="color: var(--color-mint); font-weight: bold;">0</span> vé</span><br>
+                            <span style="margin-left: 18px;">- Vé Thường (Link/Ads): <span id="display-free-tickets" style="color: var(--color-mint); font-weight: bold;">0</span> vé</span><br>
+                            <span style="margin-left: 18px; color: var(--text-muted); font-size: 11px;">(Đã xem <span id="display-ads-count">0</span>/3 Ads để nhận thêm vé)</span>
                         </div>
                         <div style="color: var(--text-muted); font-size: 11px; margin-top: 10px; font-style: italic;">
-                            * Điều kiện: Vượt thành công 1 Link HOẶC xem 3 Quảng cáo sẽ được tặng 1 lượt quay. Tối đa 5 lượt mỗi ngày.
+                            * Điều kiện: Mời 1 bạn (+3 vé VIP), vượt 1 Link hoặc xem 3 Quảng cáo (+1 vé Thường). Tối đa 5 lượt quay mỗi ngày (Riêng vé VIP sẽ KHÔNG BỊ GIỚI HẠN).
                         </div>
                     </div>
 
@@ -135,45 +150,75 @@
                 <!-- KHU VỰC 3: ĐIỂM DANH HÀNG NGÀY (Ẩn mặc định) -->
                 <div id="inline-attendance-container" style="display: none; text-align: center;">
                     <!-- Thanh tiêu đề -->
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                        <button id="btn-back-attendance" style="width: auto; padding: 6px 12px; font-size: 13px; background: rgba(255,255,255,0.1); border-radius: 8px; box-shadow: none;"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+                    <div style="margin-bottom: 25px;">
+                        <div style="text-align: left; margin-bottom: 15px;">
+                            <button id="btn-back-attendance" style="width: auto; padding: 6px 12px; font-size: 13px; background: rgba(255,255,255,0.1); border-radius: 8px; box-shadow: none;"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+                        </div>
                         <h3 style="margin-bottom: 0; color: #ec4899; justify-content: center;"><i class="fa-solid fa-calendar-check"></i> ĐIỂM DANH</h3>
-                        <div style="width: 85px;"></div> <!-- Tạo khoảng trống để cân bằng -->
                     </div>
                     
                     <!-- Bảng danh sách các ngày -->
                     <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 15px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.08);">
                         <ul class="info-list" id="attendance-list" style="text-align: left; margin-bottom: 0;">
-                            <li data-day="1"><span class="label-text"><i class="fa-regular fa-calendar"></i> Thứ 2</span><span class="val">100 Xu + 5 EXP <span class="status-icon"></span></span></li>
-                            <li data-day="2"><span class="label-text"><i class="fa-regular fa-calendar"></i> Thứ 3</span><span class="val">150 Xu + 10 EXP <span class="status-icon"></span></span></li>
-                            <li data-day="3"><span class="label-text"><i class="fa-regular fa-calendar"></i> Thứ 4</span><span class="val">200 Xu + 15 EXP <span class="status-icon"></span></span></li>
-                            <li data-day="4"><span class="label-text"><i class="fa-regular fa-calendar"></i> Thứ 5</span><span class="val">250 Xu + 20 EXP <span class="status-icon"></span></span></li>
-                            <li data-day="5"><span class="label-text"><i class="fa-regular fa-calendar"></i> Thứ 6</span><span class="val">300 Xu + 25 EXP <span class="status-icon"></span></span></li>
-                            <li data-day="6"><span class="label-text"><i class="fa-regular fa-calendar"></i> Thứ 7</span><span class="val">400 Xu + 30 EXP <span class="status-icon"></span></span></li>
-                            <li data-day="0" style="border-bottom: none; padding-bottom: 0;"><span class="label-text" style="color: #f43f5e;"><i class="fa-regular fa-calendar"></i> Chủ nhật</span><span class="val">500 Xu + 30 EXP <span class="status-icon"></span></span></li>
+                            <li data-day="1"><span class="label-text"><i class="fa-regular fa-calendar"></i> Thứ 2</span><span class="val">500 Xu + 10 EXP <span class="status-icon"></span></span></li>
+                            <li data-day="2"><span class="label-text"><i class="fa-regular fa-calendar"></i> Thứ 3</span><span class="val">500 Xu + 10 EXP <span class="status-icon"></span></span></li>
+                            <li data-day="3"><span class="label-text"><i class="fa-regular fa-calendar"></i> Thứ 4</span><span class="val">500 Xu + 10 EXP <span class="status-icon"></span></span></li>
+                            <li data-day="4"><span class="label-text"><i class="fa-regular fa-calendar"></i> Thứ 5</span><span class="val">500 Xu + 10 EXP <span class="status-icon"></span></span></li>
+                            <li data-day="5"><span class="label-text"><i class="fa-regular fa-calendar"></i> Thứ 6</span><span class="val">500 Xu + 10 EXP <span class="status-icon"></span></span></li>
+                            <li data-day="6"><span class="label-text"><i class="fa-regular fa-calendar"></i> Thứ 7</span><span class="val">500 Xu + 10 EXP <span class="status-icon"></span></span></li>
+                            <li data-day="0" style="border-bottom: none; padding-bottom: 0;"><span class="label-text" style="color: #f43f5e;"><i class="fa-regular fa-calendar"></i> Chủ nhật</span><span class="val">500 Xu + 10 EXP <span class="status-icon"></span></span></li>
                         </ul>
                     </div>
 
-                    <button id="btn-do-attendance" class="btn-pink" style="font-size: 16px;"><i class="fa-solid fa-pen-to-square"></i> ĐIỂM DANH NGAY</button>
+                    <button id="btn-do-attendance" class="btn-pink" style="font-size: 16px; margin-bottom: 30px;"><i class="fa-solid fa-pen-to-square"></i> ĐIỂM DANH NGAY</button>
+
+                    <div style="margin-bottom: 15px; text-align: center;">
+                        <h3 style="margin-bottom: 0; color: var(--color-mint); justify-content: center;">
+                            <i class="fa-solid fa-chest-unbound fa-bounce"></i> THƯỞNG ĐIỂM DANH
+                        </h3>
+                    </div>
+
+                    <div id="attendance-reward-box" style="margin-bottom: 20px; padding: 15px; background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(52, 211, 153, 0.3); border-radius: 12px; text-align: center;">
+                        <div style="color: var(--text-main); font-size: 13px; margin-bottom: 12px;">
+                            Điểm danh đủ 7 ngày liên tiếp để mở khóa nhận <span style="color: var(--color-gold); font-weight: bold;">+50,000 Xu & +100 EXP</span>.
+                        </div>
+                        <div style="font-weight: bold; color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">
+                            Tiến độ: <span id="attendance-progress" style="color: var(--color-mint); font-size: 16px;">0/7</span> ngày
+                        </div>
+                        
+                        <!-- Nút này mặc định bị khóa (màu xám) -->
+                        <button id="btn-claim-weekly" class="btn-gray" disabled style="padding: 12px; font-size: 14px; width: 100%; border-radius: 10px;">
+                            <i class="fa-solid fa-lock"></i> CHƯA ĐỦ ĐIỀU KIỆN
+                        </button>
+                    </div>
+
                 </div>
 
                 <div id="inline-leaderboard-container" style="display: none; text-align: center;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                        <button id="btn-back-leaderboard" style="width: auto; padding: 6px 12px; font-size: 13px; background: rgba(255,255,255,0.1); border-radius: 8px; box-shadow: none;"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+                    <div style="margin-bottom: 25px;">
+                        <div style="text-align: left; margin-bottom: 15px;">
+                            <button id="btn-back-leaderboard" style="width: auto; padding: 6px 12px; font-size: 13px; background: rgba(255,255,255,0.1); border-radius: 8px; box-shadow: none;"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+                        </div>
                         <h3 style="margin-bottom: 0; color: var(--color-gold); justify-content: center;"><i class="fa-solid fa-trophy"></i> XẾP HẠNG THỢ MỎ</h3>
-                        <div style="width: 85px;"></div> </div>
+                    </div>
                     
                     <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 15px; border: 1px solid rgba(255,255,255,0.08);">
                         <ul class="info-list" id="leaderboard-list" style="text-align: left; margin-bottom: 0;">
-                            </ul>
+                        </ul>
+
+                        <div id="my-rank-info" style="margin-top: 15px; padding: 12px; background: rgba(52, 211, 153, 0.1); border: 1px dashed rgba(52, 211, 153, 0.4); border-radius: 10px; color: var(--color-mint); font-weight: bold; font-size: 14px;">
+                            Thứ hạng của bạn: Đang cập nhật...
+                        </div>
                     </div>
                 </div>
 
                 <div id="inline-invite-container" style="display: none; text-align: center;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                        <button id="btn-back-invite" style="width: auto; padding: 6px 12px; font-size: 13px; background: rgba(255,255,255,0.1); border-radius: 8px; box-shadow: none;"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+                    <div style="margin-bottom: 25px;">
+                        <div style="text-align: left; margin-bottom: 15px;">
+                            <button id="btn-back-invite" style="width: auto; padding: 6px 12px; font-size: 13px; background: rgba(255,255,255,0.1); border-radius: 8px; box-shadow: none;"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+                        </div>
                         <h3 style="margin-bottom: 0; color: var(--color-mint); justify-content: center;"><i class="fa-solid fa-user-plus"></i> MỜI BẠN BÈ</h3>
-                        <div style="width: 85px;"></div> </div>
+                    </div>
                     
                     <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 25px 15px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.08);">
                         <div style="font-size: 14px; color: var(--text-muted); margin-bottom: 12px;">Số bạn bè đã mời thành công</div>
@@ -181,11 +226,82 @@
                             <i class="fa-solid fa-users" style="font-size: 28px; margin-right: 5px;"></i> <span id="invited-count">0</span>
                         </div>
                         <div style="font-size: 13px; color: var(--text-main); line-height: 1.5; padding: 0 10px;">
-                            Thưởng <span style="color: var(--color-gold); font-weight: bold;">+5,000 Xu, +50 EXP và +3 Lượt quay</span> cho mỗi người bạn tham gia qua liên kết của bạn!
+                            Thưởng <span style="color: var(--color-gold); font-weight: bold;">+5,000 Xu, +20 EXP và +3 Lượt quay</span> khi người bạn mời đạt <b>Lv 2</b>!
                         </div>
                     </div>
 
                     <button id="btn-share-link" class="btn-mint" style="font-size: 16px;"><i class="fa-solid fa-share-nodes"></i> CHIA SẺ LIÊN KẾT NGAY</button>
+                </div>
+
+                <!-- ================= KHU VỰC 5: GIFT CODE ================= -->
+                <div id="inline-giftcode-container" style="display: none; text-align: center;">
+                    <div style="margin-bottom: 25px;">
+                        <div style="text-align: left; margin-bottom: 15px;">
+                            <button id="btn-back-giftcode" style="width: auto; padding: 6px 12px; font-size: 13px; background: rgba(255,255,255,0.1); border-radius: 8px; box-shadow: none;"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+                        </div>
+                        <h3 style="margin-bottom: 0; color: #f43f5e; justify-content: center;"><i class="fa-solid fa-gift"></i> MÃ QUÀ TẶNG</h3>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 25px 15px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.08);">
+                        <div style="font-size: 13px; color: var(--text-main); line-height: 1.5; margin-bottom: 15px;">
+                            Nhập mã Gift Code từ sự kiện hoặc Admin để nhận ngay Xu và EXP!
+                        </div>
+                        <input type="text" id="input-giftcode" class="input-field" placeholder="Nhập mã vào đây..." style="text-align: center; font-weight: bold; font-size: 16px; text-transform: uppercase;">
+                    </div>
+
+                    <button id="btn-submit-giftcode" class="btn-primary" style="background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%); font-size: 16px;">
+                        <i class="fa-solid fa-check-circle"></i> XÁC NHẬN MÃ
+                    </button>
+                </div>
+
+                <!-- ================= KHU VỰC 6: KHO VẬT PHẨM (MỚI) ================= -->
+                <div id="inline-inventory-container" style="display: none; text-align: center;">
+                    <div style="margin-bottom: 20px;">
+                        <div style="text-align: left; margin-bottom: 15px;">
+                            <button id="btn-back-inventory" style="width: auto; padding: 6px 12px; font-size: 13px; background: rgba(255,255,255,0.1); border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); color:#fff;"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+                        </div>
+                        <h3 style="margin-bottom: 0; color: #34d399; justify-content: center;"><i class="fa-solid fa-box-open"></i> KHO VẬT PHẨM & CỬA HÀNG</h3>
+                    </div>
+
+                    <!-- Item 1 -->
+                    <div class="item-shop-card" style="background: rgba(255,255,255,0.04); border-radius:12px; padding:15px; margin-bottom:12px; border:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center;">
+                        <div style="text-align:left; flex: 1; padding-right: 10px;">
+                            <div style="font-weight:bold; font-size:14px; color:#fff;"><i class="fa-solid fa-bolt" style="color:#facc15;"></i> Thẻ x2 Đào (1 Giờ) <span style="color: var(--text-muted); font-size: 12px; font-weight: normal;">- 20K Xu</span></div>
+                            <div style="font-size: 11px; color: #94a3b8; margin-top: 4px; margin-bottom: 6px; line-height: 1.4;">Tăng tốc độ máy đào lên gấp 2 lần (x2) trong vòng 1 giờ liên tục.</div>
+                            <div style="font-size:11px; color:var(--text-muted);">Số lượng: <b id="inv-b1h" style="color:#34d399;">0</b></div>
+                        </div>
+                        <button class="btn-item-action btn-primary" data-item="b1h" style="width:auto; padding:8px 14px; font-size:12px; border-radius:8px;"><i class="fa-solid fa-cart-shopping"></i> Mua 20K Xu</button>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="item-shop-card" style="background: rgba(255,255,255,0.04); border-radius:12px; padding:15px; margin-bottom:12px; border:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center;">
+                        <div style="text-align:left; flex: 1; padding-right: 10px;">
+                            <div style="font-weight:bold; font-size:14px; color:#fff;"><i class="fa-solid fa-bolt" style="color:#facc15;"></i> Thẻ x2 Đào (2 Giờ) <span style="color: var(--text-muted); font-size: 12px; font-weight: normal;">- 30K Xu</span></div>
+                            <div style="font-size: 11px; color: #94a3b8; margin-top: 4px; margin-bottom: 6px; line-height: 1.4;">Tăng tốc độ máy đào lên gấp 2 lần (x2) trong vòng 2 giờ liên tục.</div>
+                            <div style="font-size:11px; color:var(--text-muted);">Số lượng: <b id="inv-b2h" style="color:#34d399;">0</b></div>
+                        </div>
+                        <button class="btn-item-action btn-primary" data-item="b2h" style="width:auto; padding:8px 14px; font-size:12px; border-radius:8px;"><i class="fa-solid fa-cart-shopping"></i> Mua 30K Xu</button>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div class="item-shop-card" style="background: rgba(255,255,255,0.04); border-radius:12px; padding:15px; margin-bottom:12px; border:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center;">
+                        <div style="text-align:left; flex: 1; padding-right: 10px;">
+                            <div style="font-weight:bold; font-size:14px; color:#fff;"><i class="fa-solid fa-bolt" style="color:#facc15;"></i> Thẻ x2 Đào (4 Giờ) <span style="color: var(--text-muted); font-size: 12px; font-weight: normal;">- 50K Xu</span></div>
+                            <div style="font-size: 11px; color: #94a3b8; margin-top: 4px; margin-bottom: 6px; line-height: 1.4;">Tăng tốc độ máy đào lên gấp 2 lần (x2) trong vòng 4 giờ liên tục.</div>
+                            <div style="font-size:11px; color:var(--text-muted);">Số lượng: <b id="inv-b4h" style="color:#34d399;">0</b></div>
+                        </div>
+                        <button class="btn-item-action btn-primary" data-item="b4h" style="width:auto; padding:8px 14px; font-size:12px; border-radius:8px;"><i class="fa-solid fa-cart-shopping"></i> Mua 50K Xu</button>
+                    </div>
+
+                    <!-- Item 4 -->
+                    <div class="item-shop-card" style="background: rgba(255,255,255,0.04); border-radius:12px; padding:15px; margin-bottom:12px; border:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center;">
+                        <div style="text-align:left; flex: 1; padding-right: 10px;">
+                            <div style="font-weight:bold; font-size:14px; color:#fff;"><i class="fa-solid fa-shield-halved" style="color:#ec4899;"></i> Bảo Hiểm Streak <span style="color: var(--text-muted); font-size: 12px; font-weight: normal;">- 10K Xu</span></div>
+                            <div style="font-size: 11px; color: #94a3b8; margin-top: 4px; margin-bottom: 6px; line-height: 1.4;">Sử dụng để vá lại chuỗi điểm danh 7 ngày nếu hôm qua bạn lỡ quên.</div>
+                            <div style="font-size:11px; color:var(--text-muted);">Số lượng: <b id="inv-insurance" style="color:#34d399;">0</b></div>
+                        </div>
+                        <button class="btn-item-action btn-primary" data-item="insurance" style="width:auto; padding:8px 14px; font-size:12px; border-radius:8px;"><i class="fa-solid fa-cart-shopping"></i> Mua 10K Xu</button>
+                    </div>
                 </div>
                 
             </div>
@@ -213,10 +329,17 @@
             </div>
 
             <div class="card" id="wd-form-bank" style="display: none;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <button class="btn-back-wd" style="width: auto; padding: 6px 12px; font-size: 13px; background: rgba(255,255,255,0.1); border-radius: 8px;"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
-                    <h3 style="margin-bottom: 0; color: #3b82f6;"><i class="fa-solid fa-building-columns"></i> RÚT NGÂN HÀNG</h3>
-                    <div style="width: 85px;"></div>
+                <div style="margin-bottom: 20px;">
+                    <div style="text-align: left; margin-bottom: 15px;">
+                        <button class="btn-back-wd" style="width: auto; padding: 6px 12px; font-size: 13px; background: rgba(255,255,255,0.1); border-radius: 8px;"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+                    </div>
+                    <h3 style="margin-bottom: 0; color: #3b82f6; justify-content: center;"><i class="fa-solid fa-building-columns"></i> RÚT NGÂN HÀNG</h3>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 20px; border: 1px dashed rgba(255,255,255,0.1);">
+                    <div style="color: var(--text-muted); font-size: 13px; margin-bottom: 4px;">Số dư khả dụng:</div>
+                    <span id="wd-bank-xu" style="color: var(--color-mint); font-weight: bold; font-size: 16px;">0</span> <span style="color: var(--color-mint); font-size: 14px;">Xu</span> 
+                    <span style="color: var(--text-muted); font-size: 13px;">(~<span id="wd-bank-vnd">0</span> VNĐ)</span>
                 </div>
                 
                 <input type="number" id="bank-amount" class="input-field" placeholder="Số tiền rút (VNĐ) - VD: 5000">
@@ -228,10 +351,17 @@
             </div>
 
             <div class="card" id="wd-form-momo" style="display: none;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <button class="btn-back-wd" style="width: auto; padding: 6px 12px; font-size: 13px; background: rgba(255,255,255,0.1); border-radius: 8px;"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
-                    <h3 style="margin-bottom: 0; color: #d946ef;"><i class="fa-solid fa-wallet"></i> RÚT VÍ MOMO</h3>
-                    <div style="width: 85px;"></div>
+                <div style="margin-bottom: 20px;">
+                    <div style="text-align: left; margin-bottom: 15px;">
+                        <button class="btn-back-wd" style="width: auto; padding: 6px 12px; font-size: 13px; background: rgba(255,255,255,0.1); border-radius: 8px;"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+                    </div>
+                    <h3 style="margin-bottom: 0; color: #d946ef; justify-content: center;"><i class="fa-solid fa-wallet"></i> RÚT VÍ MOMO</h3>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 20px; border: 1px dashed rgba(255,255,255,0.1);">
+                    <div style="color: var(--text-muted); font-size: 13px; margin-bottom: 4px;">Số dư khả dụng:</div>
+                    <span id="wd-momo-xu" style="color: var(--color-mint); font-weight: bold; font-size: 16px;">0</span> <span style="color: var(--color-mint); font-size: 14px;">Xu</span> 
+                    <span style="color: var(--text-muted); font-size: 13px;">(~<span id="wd-momo-vnd">0</span> VNĐ)</span>
                 </div>
                 
                 <input type="number" id="momo-amount" class="input-field" placeholder="Số tiền rút (VNĐ) - VD: 5000">
@@ -265,43 +395,6 @@
     </div>
 
     <!-- ================= GIAO DIỆN VÒNG QUAY MAY MẮN ================= -->
-        <div id="wheel-modal" class="modal-overlay">
-            <div class="modal-content">
-                <button class="close-btn" onclick="closeWheel()"><i class="fa-solid fa-xmark"></i></button>
-                <h2 style="margin-bottom: 20px; font-size: 18px; color: var(--color-gold);"><i class="fa-solid fa-ferris-wheel"></i> VÒNG QUAY MAY MẮN</h2>
-                
-                <div class="wheel-container">
-                    <div class="wheel-pointer"><i class="fa-solid fa-caret-down"></i></div>
-                    <div class="wheel" id="lucky-wheel">
-                        <!-- 10 phần thưởng -->
-                        <div class="wheel-inner">
-                            <span class="prize p1">100 Xu</span>
-                            <span class="prize p2">50 EXP</span>
-                            <span class="prize p3">200 Xu</span>
-                            <span class="prize p4">10 EXP</span>
-                            <span class="prize p5">500 Xu</span>
-                            <span class="prize p6">100 EXP</span>
-                            <span class="prize p7">50 Xu</span>
-                            <span class="prize p8">20 EXP</span>
-                            <span class="prize p9">1000 Xu</span>
-                            <span class="prize p10">200 EXP</span>
-                        </div>
-                    </div>
-                </div>
-
-                <button id="btn-spin" class="btn-gold" style="margin-top: 30px; font-size: 16px;"><i class="fa-solid fa-rotate-right"></i> BẮT ĐẦU QUAY</button>
-                
-                <div id="wheel-result" style="margin-top: 15px; font-size: 15px; font-weight: bold; color: var(--color-mint); min-height: 20px; opacity: 0; transition: opacity 0.3s ease;"></div>
-        </div>
-
-        <div id="wheel-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-gradient); z-index: 9999; flex-direction: column; align-items: center; justify-content: center;">
-            <button onclick="hideWheel()" style="position: absolute; top: 20px; left: 20px; background: none; border: none; color: #fff; font-size: 24px;"><i class="fa-solid fa-arrow-left"></i></button>
-            
-            <div class="wheel" id="wheel" style="width: 300px; height: 300px;">
-                </div>
-            <button id="btn-spin" class="btn-gold" style="margin-top: 30px;">QUAY NGAY</button>
-            <div id="wheel-result" style="margin-top: 15px; color: #fff;"></div>
-        </div>
 
     <!-- File Javascript riêng biệt -->
     <script src="app.js"></script>

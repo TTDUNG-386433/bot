@@ -360,21 +360,6 @@ button:active {
     50% { border-color: #34d399; box-shadow: 0 4px 25px rgba(52, 211, 153, 0.15); }
 }
 
-/* Giao diện danh sách link nhiệm vụ */
-.task-list-container {
-    margin-top: 16px;
-    margin-bottom: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-/* Giao diện danh sách link tối giản */
-.task-list-container {
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
 .simple-task-item {
     margin-bottom: 24px; /* Tạo khoảng trống giữa các cụm Link */
     text-align: left;
@@ -705,4 +690,58 @@ button:active {
 /* Thêm hiệu ứng chuyển màu mượt mà khi bấm */
 .bottom-nav .nav-item {
     transition: all 0.3s ease;
+}
+
+/* ================= THÔNG BÁO TOAST ================= */
+.custom-toast {
+    position: fixed;
+    /* Đẩy xuống dưới, cách đáy 95px để ko che thanh điều hướng */
+    bottom: 95px; 
+    left: 50%;
+    /* Chỉ căn giữa theo chiều ngang (trục X) */
+    transform: translateX(-50%) scale(0.8); 
+    background: rgba(30, 41, 59, 0.95);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #f8fafc;
+    /* Có thể hạ padding từ 30px xuống 20px để cái hộp nó gọn hơn một chút */
+    padding: 20px 20px; 
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    box-shadow: 0 10px 50px rgba(0,0,0,0.8);
+    z-index: 10000;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    
+    width: 80%;
+    max-width: 280px;
+    text-align: center;
+    line-height: 1.5;
+}
+
+/* Hiệu ứng nảy popup ra màn hình */
+.custom-toast.show {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+}
+
+/* Cho icon to ra làm điểm nhấn chính giữa */
+.custom-toast i {
+    font-size: 45px !important; 
+}
+
+/* Màu của icon theo trạng thái */
+.custom-toast.success i { color: #34d399; }
+.custom-toast.error i { color: #f43f5e; }
+
+.btn-item-action {
+    white-space: nowrap; 
+    overflow: visible;  
+    flex-shrink: 0;    
 }
