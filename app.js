@@ -292,13 +292,11 @@ function showRewardAd() {
     return new Promise((resolve, reject) => {
         try {
             if (window.TelegramAdsController) {
-                let adPromise = window.TelegramAdsController.show({ widgetId: "401324" }); 
-                
-                if (adPromise && typeof adPromise.then === 'function') {
-                    adPromise.then(resolve).catch(reject);
-                } else {
-                    setTimeout(resolve, 1000); 
-                }
+                window.TelegramAdsController.triggerInterstitialBanner().then((result) => {
+                    resolve(result);
+                }).catch((result) => {
+                    reject(result);
+                });
             } else {
                 reject("RichAds chưa được tải");
             }
