@@ -279,7 +279,7 @@ function switchTab(tabId) {
     if(idx !== -1) document.querySelectorAll('.nav-item')[idx].classList.add('active');
 }
 
-const AdController = window.Adsgram.init({ blockId: "34713" });
+const AdController = window.Adsgram.init({ blockId: "35429" });
 const watchAdBtn = document.getElementById("btn-watch-ad");
 
 function startAdCooldown(btn, seconds = 20, defaultText = "") {
