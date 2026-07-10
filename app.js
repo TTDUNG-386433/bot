@@ -632,7 +632,7 @@ function renderLeaderboard(leaderboardData) {
     leaderboardList.innerHTML = "";
 
     leaderboardData.forEach((user) => {
-        let rankIcon = user.rank === 1 ? "🥇" : user.rank === 2 ? "🥈" : user.rank === 3 ? "🥉" : `<span style='display: inline-block; width: 20px; text-align: left; color: var(--text-muted); font-weight: bold;'>${user.rank}.</span>`;
+        let rankIcon = user.rank === 1 ? "🥇" : user.rank === 2 ? "🥈" : user.rank === 3 ? "🥉" : `<span style='display: inline-block; width: 22px; text-align: center; color: var(--text-muted); font-weight: bold;'>${user.rank}.</span>`;
         let displayName = user.name;
 
         const li = document.createElement("li");
@@ -641,18 +641,19 @@ function renderLeaderboard(leaderboardData) {
             li.style.paddingBottom = "0";
         }
 
+        // Fix CSS Grid: Tỉ lệ chuẩn 50% - 15% - 35% và ép không tràn text
         li.style.display = "grid";
-        li.style.gridTemplateColumns = "45% 20% 35%";
+        li.style.gridTemplateColumns = "50% 15% 35%";
         li.style.alignItems = "center";
-        li.style.gap = "5px";
+        li.style.gap = "8px";
 
         li.innerHTML = `
-            <div style="display: flex; align-items: center; overflow: hidden; white-space: nowrap;">
-                <span style="margin-right: 6px; font-size: 15px;">${rankIcon}</span> 
-                <span style="font-weight: 600; color: var(--text-main); font-size: 13px; text-overflow: ellipsis; overflow: hidden;">${displayName}</span>
+            <div style="display: flex; align-items: center; min-width: 0;">
+                <span style="margin-right: 8px; font-size: 16px; flex-shrink: 0;">${rankIcon}</span>
+                <span style="font-weight: 600; color: var(--text-main); font-size: 14px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; display: block; width: 100%;">${displayName}</span>
             </div>
             <div style="text-align: center; color: var(--color-blue); font-size: 13px; font-weight: 600;">Lv ${user.level}</div>
-            <div style="text-align: right; color: var(--color-gold); font-size: 13px; font-weight: 700;">${user.xu.toLocaleString()} Xu</div>
+            <div style="text-align: right; color: var(--color-gold); font-size: 14px; font-weight: 700;">${user.xu.toLocaleString()} Xu</div>
         `;
         leaderboardList.appendChild(li);
     });
@@ -809,6 +810,7 @@ if (btnDoAttendance) {
 }
 
 // ================= LOGIC RENDER DANH SÁCH LINK NHIỆM VỤ REALTIME =================
+// ================= LOGIC RENDER DANH SÁCH LINK NHIỆM VỤ REALTIME =================
 function renderTaskList(tasksData) {
     const container = document.getElementById("task-list-container");
     if (!container) return; 
@@ -821,6 +823,19 @@ function renderTaskList(tasksData) {
         const statusText = isCompleted ? "thành công" : "chưa làm";
         if (isCompleted) completedCount++;
 
+        // Tự động nhận diện tên nhà cung cấp dựa vào cụm từ trong link
+        let provider = "Link rút gọn";
+        if (task.link.includes("link4m.co")) {
+            provider = "Link4M";
+        } else if (task.link.includes("link2m.net")) {
+            provider = "Link2M";
+        } else {
+            try {
+                // Nếu là link khác ông thêm thủ công, nó tự lấy tên domain (vd: link4sub.com)
+                provider = new URL(task.link).hostname.replace('www.', '');
+            } catch (e) {}
+        }
+
         let linkActionHTML = "";
         if (isCompleted) {
             linkActionHTML = `<span style="color: var(--text-muted); text-decoration: line-through; cursor: not-allowed;">🔒 Đã vượt xong</span>`;
@@ -828,9 +843,10 @@ function renderTaskList(tasksData) {
             linkActionHTML = `<span onclick="startTaskAndOpen(${task.id}, '${task.link}')" style="color: var(--color-blue); text-decoration: underline; cursor: pointer;">Nhấn để vượt link</span>`;
         }
 
+        // Đã sửa hiển thị thêm phần (${provider}) ở đây
         const taskHTML = `
             <div class="simple-task-item">
-                <div class="simple-task-text">Link ${index + 1}: ${linkActionHTML}</div>
+                <div class="simple-task-text">Link ${index + 1} (${provider}): ${linkActionHTML}</div>
                 <div class="simple-task-text">Trạng thái: <span class="${isCompleted ? 'status-completed' : 'status-pending'}">${statusText}</span></div>
             </div>
         `;
