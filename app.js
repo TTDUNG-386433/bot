@@ -93,7 +93,9 @@ async function loadRealData() {
         dailySpins = data.user.daily_spins || 0;
         let adCount = data.user.ad_count || 0;
         userAdsWatched = adCount; 
+        let invitedCount = data.user.invited_count || 0;
 
+        if(document.getElementById("invited-count")) document.getElementById("invited-count").innerText = invitedCount;
         if(document.getElementById("display-ads-watched")) document.getElementById("display-ads-watched").innerText = userAdsWatched;
         if(document.getElementById("display-extra-spins")) document.getElementById("display-extra-spins").innerText = extraSpins;
         if(document.getElementById("display-free-tickets")) document.getElementById("display-free-tickets").innerText = freeTickets;
@@ -121,6 +123,29 @@ async function loadRealData() {
         startBuffTimer(data.user.buff_expire_at);
         checkLevelUp(data.user.exp, data.user.exp_required, data.user.level);
 
+        const refListContainer = document.getElementById("ref-list");
+        if (refListContainer && data.referrals_list) {
+            refListContainer.innerHTML = "";
+            if (data.referrals_list.length === 0) {
+                refListContainer.innerHTML = `<li style="justify-content: center; color: var(--text-muted); border: none;">Chưa có bạn bè nào.</li>`;
+            } else {
+                data.referrals_list.forEach(ref => {
+                    const statusText = ref.rewarded 
+                        ? '<span style="color: var(--color-mint); font-size: 12px;"><i class="fa-solid fa-check"></i> Hoàn thành</span>' 
+                        : '<span style="color: var(--color-orange); font-size: 12px;"><i class="fa-solid fa-clock"></i> Đang chờ...</span>';
+                    
+                    refListContainer.innerHTML += `
+                        <li style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed rgba(255,255,255,0.1);">
+                            <span style="color: var(--text-main); font-weight: 600; font-size: 14px;">
+                                <i class="fa-solid fa-user" style="color: var(--color-blue); margin-right: 8px;"></i> ${ref.name}
+                            </span>
+                            ${statusText}
+                        </li>
+                    `;
+                });
+            }
+        }
+        
         const completedLinksCount = data.tasks.filter(t => t.completed).length;
         userLinksCompleted = completedLinksCount; 
 
