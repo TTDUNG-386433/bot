@@ -290,21 +290,46 @@ function startMiningTimer(endTimeStr) {
 }
 
 // ================= HÀM ĐIỀU HƯỚNG 4 TAB =================
+
+function resetUtilsMenu() {
+    const subContainers = [
+        "inline-wheel-container",
+        "inline-attendance-container",
+        "inline-leaderboard-container",
+        "inline-invite-container",
+        "inline-giftcode-container",
+        "inline-inventory-container"
+    ];
+    
+    subContainers.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = "none";
+    });
+    
+    const mainBtns = document.getElementById("utils-buttons-container");
+    if (mainBtns) mainBtns.style.display = "block";
+    
+    const resultDiv = document.getElementById("wheel-result");
+    if (resultDiv) resultDiv.style.opacity = "0";
+}
+
 function switchTab(tabId) {
     document.querySelectorAll('.tab-content').forEach(tab => {
         tab.classList.remove('active');
     });
-    
+
     const target = document.getElementById(tabId);
     if (target) {
         target.classList.add('active');
     }
-    
+
     document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
     
     const order = ['tab-home', 'tab-tasks', 'tab-utils', 'tab-withdraw'];
     const idx = order.indexOf(tabId);
     if(idx !== -1) document.querySelectorAll('.nav-item')[idx].classList.add('active');
+
+    resetUtilsMenu();
 }
 
 // ================= XỬ LÝ QUẢNG CÁO NGUỒN 1 & NGUỒN 2 =================
@@ -630,10 +655,8 @@ const btnBackInvite = document.getElementById("btn-back-invite");
 const btnShareLink = document.getElementById("btn-share-link");
 const invitedCountDisplay = document.getElementById("invited-count");
 
-let invitedCount = 0; 
 if (btnInvite) {
     btnInvite.addEventListener("click", () => {
-        if (invitedCountDisplay) invitedCountDisplay.innerText = invitedCount;
         utilsButtonsContainer.style.display = "none";
         inlineInviteContainer.style.display = "block";
     });

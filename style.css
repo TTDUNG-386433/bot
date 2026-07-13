@@ -52,16 +52,71 @@ body {
 
 @media (prefers-color-scheme: light) {
     :root {
-        --bg-gradient: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-        --card-glass: rgba(255, 255, 255, 0.85);
-        --card-border: rgba(15, 23, 42, 0.08);
-        --text-main: #0f172a;
-        --text-muted: #64748b;
+        --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        --card-glass: rgba(255, 255, 255, 0.95);
+        --card-border: rgba(0, 0, 0, 0.1);
+        --text-main: #0f172a; /* Chữ chính màu đen đậm */
+        --text-muted: #334155; /* Chữ phụ (Tên, Cấp độ, Tốc độ) xám đậm sắc nét */
         --color-blue: #0284c7;
         --color-blue-glow: rgba(2, 132, 199, 0.2);
-        --color-gray: #cbd5e1;
+        --color-gray: #64748b;
         --bg-balance: rgba(13, 148, 136, 0.1);
-        --border-balance: rgba(13, 148, 136, 0.3);
+        --border-balance: rgba(13, 148, 136, 0.4);
+    }
+
+    /* 1. Sửa các thẻ chữ bị code cứng màu trắng trên CSS */
+    .guide-box p, .guide-box ul li, .txt-rank {
+        color: var(--text-main) !important;
+    }
+
+    /* 2. Sửa đường kẻ ngang bị tàng hình */
+    .info-list li {
+        border-bottom: 1px dashed rgba(0, 0, 0, 0.1) !important;
+    }
+
+    /* 3. Khung nhập liệu (Input) Rút tiền/Giftcode */
+    .input-field {
+        background: rgba(0, 0, 0, 0.03) !important;
+        border: 1px solid rgba(0, 0, 0, 0.1) !important;
+        color: var(--text-main) !important;
+    }
+    .input-field::placeholder {
+        color: var(--text-muted) !important;
+    }
+
+    /* 4. Sửa nút ĐANG ĐÀO... (Nút bị disabled) không đọc được chữ */
+    button:disabled {
+        background: rgba(0, 0, 0, 0.08) !important;
+        color: var(--text-muted) !important;
+        border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    }
+
+    /* 5. GHI ĐÈ: Tự động đổi các khối Box nền trắng mờ trong HTML sang xám mờ */
+    [style*="background: rgba(255,255,255"],
+    [style*="background: rgba(255, 255, 255"] {
+        background: rgba(0, 0, 0, 0.03) !important;
+        border-color: rgba(0, 0, 0, 0.08) !important;
+    }
+
+    /* 6. GHI ĐÈ: Tự động đổi chữ màu trắng bị code chết trong HTML sang đen */
+    [style*="color:#fff"], [style*="color: #fff"], 
+    [style*="color:#ffffff"], [style*="color: #ffffff"] {
+        color: var(--text-main) !important;
+    }
+
+    /* 7. Nút Quay Lại */
+    button[id^="btn-back-"], .btn-back-wd {
+        background: rgba(0, 0, 0, 0.05) !important;
+        color: var(--text-main) !important;
+        border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    }
+
+    /* 8. Bảng thông báo Toast (Popup góc dưới) */
+    .custom-toast {
+        background: rgba(255, 255, 255, 0.95);
+        color: var(--text-main);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
     }
 }
 
