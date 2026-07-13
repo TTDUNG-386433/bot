@@ -734,13 +734,21 @@ if (btnDoAttendance) {
     });
 }
 
-// ================= LOGIC RENDER DANH SÁCH LINK NHIỆM VỤ REALTIME =================
-// ================= LOGIC RENDER DANH SÁCH LINK NHIỆM VỤ REALTIME =================
 function renderTaskList(tasksData) {
     const container = document.getElementById("task-list-container");
     if (!container) return; 
 
-    container.innerHTML = ""; 
+    container.innerHTML = `
+        <div class="community-links">
+            <a href="https://t.me/cayxudoitien_channel" class="btn-community btn-channel" target="_blank">
+                <i class="fa-solid fa-bullhorn"></i> Kênh Thông Báo
+            </a>
+            <a href="https://t.me/cayxudoitien_chat" class="btn-community btn-chat" target="_blank">
+                <i class="fa-solid fa-comments"></i> Nhóm Chat
+            </a>
+        </div>
+    `;
+
     let completedCount = 0;
 
     tasksData.forEach((task, index) => {
@@ -748,7 +756,6 @@ function renderTaskList(tasksData) {
         const statusText = isCompleted ? "thành công" : "chưa làm";
         if (isCompleted) completedCount++;
 
-        // Tự động nhận diện tên nhà cung cấp dựa vào cụm từ trong link
         let provider = "Link rút gọn";
         if (task.link.includes("link4m.co")) {
             provider = "Link4M";
@@ -756,7 +763,6 @@ function renderTaskList(tasksData) {
             provider = "Link2M";
         } else {
             try {
-                // Nếu là link khác ông thêm thủ công, nó tự lấy tên domain (vd: link4sub.com)
                 provider = new URL(task.link).hostname.replace('www.', '');
             } catch (e) {}
         }
@@ -768,7 +774,6 @@ function renderTaskList(tasksData) {
             linkActionHTML = `<span onclick="startTaskAndOpen(${task.id}, '${task.link}')" style="color: var(--color-blue); text-decoration: underline; cursor: pointer;">Nhấn để vượt link</span>`;
         }
 
-        // Đã sửa hiển thị thêm phần (${provider}) ở đây
         const taskHTML = `
             <div class="simple-task-item">
                 <div class="simple-task-text">Link ${index + 1} (${provider}): ${linkActionHTML}</div>

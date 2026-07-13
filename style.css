@@ -806,3 +806,23 @@ button:active {
     font-weight: 700;
     box-shadow: 0 4px 10px rgba(168, 85, 247, 0.3);
 }
+
+.community-links {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.btn-community {
+    flex: 1;
+    padding: 10px;
+    font-size: 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    text-align: center;
+    font-weight: 700;
+    transition: all 0.3s;
+}
+
+.btn-channel { background: #0088cc; color: white; } /* Màu xanh Telegram */
+.btn-chat { background: #34d399; color: white; }    /* Màu xanh lá */
