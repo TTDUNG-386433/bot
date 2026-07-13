@@ -828,6 +828,10 @@ button:active {
 .btn-chat { background: #34d399; color: white; }    /* Màu xanh lá */
 
 .btn-do-task {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    z-index: 100;
+    position: relative;
     background: #ffffff;      /* Màu nền trắng */
     color: #856404;           /* Màu chữ nâu vàng */
     border: 1px solid #ffeeba;
