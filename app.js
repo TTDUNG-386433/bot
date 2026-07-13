@@ -68,10 +68,13 @@ async function loadRealData() {
     }
     
     try {
-        const response = await fetch(`${API_URL}?initData=${encodeURIComponent(tg.initData)}&t=${new Date().getTime()}`, {
+        const response = await fetch(`${API_URL}`, {
+            method: 'POST',
             headers: {
+                'Content-Type': 'application/json',
                 "ngrok-skip-browser-warning": "true"
-            }
+            },
+            body: JSON.stringify({ initData: tg.initData })
         });
         const data = await response.json();
         
