@@ -100,7 +100,7 @@ async function loadRealData() {
         if(document.getElementById("display-extra-spins")) document.getElementById("display-extra-spins").innerText = extraSpins;
         if(document.getElementById("display-free-tickets")) document.getElementById("display-free-tickets").innerText = freeTickets;
         if(document.getElementById("display-daily-spins")) document.getElementById("display-daily-spins").innerText = `${dailySpins}/5`;
-        if(document.getElementById("display-ads-count")) document.getElementById("display-ads-count").innerText = adCount % 3;
+        if(document.getElementById("display-ads-count")) document.getElementById("display-ads-count").innerText = adCount % 5;
 
         document.getElementById("inv-b1h").innerText = data.user.b1h;
         document.getElementById("inv-b2h").innerText = data.user.b2h;
@@ -145,7 +145,7 @@ async function loadRealData() {
                 });
             }
         }
-        
+
         const completedLinksCount = data.tasks.filter(t => t.completed).length;
         userLinksCompleted = completedLinksCount; 
 
@@ -371,7 +371,7 @@ if (watchAdBtn) {
                     if(document.getElementById("display-ads-watched")) document.getElementById("display-ads-watched").innerText = userAdsWatched;
                     
                     let freeTickets = data.free_tickets || 0;
-                    if(document.getElementById("display-ads-count")) document.getElementById("display-ads-count").innerText = adCount % 3;
+                    if(document.getElementById("display-ads-count")) document.getElementById("display-ads-count").innerText = adCount % 5;
                     if(document.getElementById("display-free-tickets")) document.getElementById("display-free-tickets").innerText = freeTickets;
 
                     showToast(`🎉 Bạn vừa nhận đc ${data.reward_xu} Xu và ${data.reward_exp} EXP.`);
