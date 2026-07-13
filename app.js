@@ -953,8 +953,13 @@ async function syncData() {
     isSyncing = true;
     
     try {
-        const response = await fetch(`${API_URL}?initData=${encodeURIComponent(tg.initData)}&t=${new Date().getTime()}`, {
-            headers: { "ngrok-skip-browser-warning": "true" }
+        const response = await fetch(`${API_URL}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                "ngrok-skip-browser-warning": "true"
+            },
+            body: JSON.stringify({ initData: tg.initData })
         });
         const data = await response.json();
         if (data.error) return;
@@ -1003,22 +1008,17 @@ setTimeout(() => {
     const taskListContainer = document.getElementById("task-list-container");
     
     if (taskListContainer && !document.getElementById("btn-refresh-tasks")) {
-        const refreshBtn = document.createElement("button");
-        refreshBtn.id = "btn-refresh-tasks";
-        refreshBtn.className = "btn-mint"; 
-        refreshBtn.style.marginTop = "25px";
-        refreshBtn.style.marginBottom = "15px"; 
-        refreshBtn.innerHTML = "<i class='fa-solid fa-rotate'></i> LÀM MỚI TRẠNG THÁI LINK";
-        
-        refreshBtn.onclick = () => {
-            refreshBtn.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> ĐANG LÀM MỚI...";
-            refreshBtn.style.opacity = "0.7";
-            syncData().then(() => {
-                refreshBtn.innerHTML = "<i class='fa-solid fa-rotate'></i> LÀM MỚI TRẠNG THÁI LINK";
-                refreshBtn.style.opacity = "1";
-            });
-        };
-        taskListContainer.parentNode.insertBefore(refreshBtn, taskListContainer.nextSibling);
+        const refreshBtn = document.getElementById("btn-refresh-tasks");
+        if (refreshBtn) {
+            refreshBtn.onclick = () => {
+                refreshBtn.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> ĐANG LÀM MỚI...";
+                refreshBtn.style.opacity = "0.7";
+                syncData().then(() => {
+                    refreshBtn.innerHTML = "<i class='fa-solid fa-rotate'></i> LÀM MỚI TRẠNG THÁI LINK";
+                    refreshBtn.style.opacity = "1";
+                });
+            };
+        }
     }
 }, 1000);
 
