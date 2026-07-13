@@ -7,7 +7,6 @@ const userId = tg.initDataUnsafe?.user?.id || 0;
 
 let miningInterval;
 let userAdsWatched = 0;   
-let userAdsWatched2 = 0;
 let userLinksCompleted = 0; 
 let dailySpins = 0;         
 const MAX_DAILY_SPINS = 5;  
@@ -62,7 +61,6 @@ function checkLevelUp(exp, exp_required, level) {
     }
 }
 
-// ================= HÀM KẾT NỐI API LẤY DATA THẬT =================
 async function loadRealData() {
     if (!userId) {
         showToast("Không lấy được ID Telegram từ WebApp!");
@@ -91,12 +89,9 @@ async function loadRealData() {
         let freeTickets = data.user.free_tickets || 0;
         dailySpins = data.user.daily_spins || 0;
         let adCount = data.user.ad_count || 0;
-        let adCount2 = data.user.ad_count_2 || 0;
         userAdsWatched = adCount; 
-        userAdsWatched2 = adCount2;
 
         if(document.getElementById("display-ads-watched")) document.getElementById("display-ads-watched").innerText = userAdsWatched;
-        if(document.getElementById("display-ads-watched-2")) document.getElementById("display-ads-watched-2").innerText = userAdsWatched2;
         if(document.getElementById("display-extra-spins")) document.getElementById("display-extra-spins").innerText = extraSpins;
         if(document.getElementById("display-free-tickets")) document.getElementById("display-free-tickets").innerText = freeTickets;
         if(document.getElementById("display-daily-spins")) document.getElementById("display-daily-spins").innerText = `${dailySpins}/5`;
@@ -111,6 +106,7 @@ async function loadRealData() {
         document.getElementById("user-exp").innerText = data.user.level >= 20 ? "MAX LEVEL" : `${data.user.exp}/${data.user.exp_required}`;
         document.getElementById("xu-balance").innerText = data.user.xu.toLocaleString();
         document.getElementById("vnd-balance").innerText = (data.user.xu / 100).toLocaleString();
+        
         if (data.user.buff_active) {
             miningSpeed = data.user.speed * 2;
             document.getElementById("mining-speed").innerHTML = `<span style="color: #facc15;">${miningSpeed.toLocaleString()} Xu/giờ (Đang x2)</span>`;
@@ -120,18 +116,18 @@ async function loadRealData() {
         }
         
         startBuffTimer(data.user.buff_expire_at);
-        
-        
-
         checkLevelUp(data.user.exp, data.user.exp_required, data.user.level);
 
         const completedLinksCount = data.tasks.filter(t => t.completed).length;
         userLinksCompleted = completedLinksCount; 
 
         startMiningTimer(data.user.mining_end_time);
-
         renderItemButtons(data.user);
-        renderLeaderboard(data.leaderboard);
+
+        renderLeaderboardData("lb-xu", data.leaderboard_xu);
+        renderLeaderboardData("lb-link", data.leaderboard_link);
+        renderLeaderboardData("lb-ads", data.leaderboard_ads);
+
         const rankInfo = document.getElementById("my-rank-info");
         if (rankInfo) {
             rankInfo.innerHTML = `Thứ hạng của bạn: <span style="color: #fff; font-size: 16px;">#${data.user.user_rank}</span> (💰 ${data.user.xu.toLocaleString()} Xu)`;
@@ -288,24 +284,6 @@ function switchTab(tabId) {
 const AdController = window.Adsgram.init({ blockId: "37740" });
 const watchAdBtn = document.getElementById("btn-watch-ad");
 
-function showRewardAd() {
-    return new Promise((resolve, reject) => {
-        try {
-            if (window.TelegramAdsController) {
-                window.TelegramAdsController.triggerInterstitialBanner().then((result) => {
-                    resolve(result);
-                }).catch((result) => {
-                    reject(result);
-                });
-            } else {
-                reject("RichAds chưa được tải");
-            }
-        } catch (error) {
-            reject(error);
-        }
-    });
-}
-
 function startAdCooldown(btn, seconds = 20, defaultText = "") {
     let timeLeft = seconds;
     btn.disabled = true;
@@ -389,70 +367,6 @@ if (watchAdBtn) {
                 showToast("❌ Bạn tắt quảng cáo sớm nên chưa được nhận thưởng đâu nha!", "error");
                 startAdCooldown(watchAdBtn, 20, btnText); 
             }
-        });
-    });
-}
-
-const watchAdBtn2 = document.getElementById("btn-watch-ad-2");
-if (watchAdBtn2) {
-    watchAdBtn2.addEventListener("click", () => {
-        if (userAdsWatched2 >= 30) {
-            return showToast("⚠️ Bạn đã đạt giới hạn 30/30 lượt xem Nguồn 2 hôm nay!", "error");
-        }
-
-        watchAdBtn2.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> ĐANG TẢI QUẢNG CÁO...";
-        watchAdBtn2.disabled = true;
-
-        showRewardAd().then(async (result) => {
-            watchAdBtn2.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> ĐANG NHẬN THƯỞNG...";
-
-            try {
-                const adUrl = `${BASE_URL}/api/watch_ad`; 
-                const res = await fetch(adUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', "ngrok-skip-browser-warning": "true" },
-                    body: JSON.stringify({ initData: tg.initData, source: 2 }) 
-                });
-                const data = await res.json();
-
-                if (data.error) {
-                    showToast("❌ " + data.error, "error");
-                } else if (data.success) {
-                    currentXu = data.new_xu;
-                    document.getElementById("xu-balance").innerText = currentXu.toLocaleString();
-                    document.getElementById("vnd-balance").innerText = (currentXu / 100).toLocaleString();
-
-                    const levelText = document.getElementById("user-level").innerText;
-                    if (!levelText.includes("20") && !levelText.includes("MAX")) {
-                        document.getElementById("user-exp").innerText = `${data.new_exp}/${data.exp_required}`;
-                    }
-                    
-                    userAdsWatched2 = data.ad_count; 
-                    if(document.getElementById("display-ads-watched-2")) document.getElementById("display-ads-watched-2").innerText = userAdsWatched2;
-                    
-                    let freeTickets = data.free_tickets || 0;
-                    if(document.getElementById("display-free-tickets")) document.getElementById("display-free-tickets").innerText = freeTickets;
-                    
-                    showToast(`🎉 Nguồn 2: Bạn nhận đc ${data.reward_xu} Xu và ${data.reward_exp} EXP.`);
-                }
-            } catch (err) {
-                console.error("Lỗi API Ads Nguồn 2:", err);
-                showToast("❌ Có lỗi mạng khi cộng thưởng Nguồn 2!", "error");
-            }
-
-            const btnText = `<i class='fa-solid fa-video'></i> NGUỒN 2 - ADSNET (<span id="display-ads-watched-2">${userAdsWatched2}</span>/30)`;
-            startAdCooldown(watchAdBtn2, 20, btnText);
-
-        }).catch((error) => {
-            const btnText = `<i class='fa-solid fa-video'></i> NGUỒN 2 - ADSNET (<span id="display-ads-watched-2">${userAdsWatched2}</span>/30)`;
-            const errString = (JSON.stringify(error) + String(error)).toLowerCase();
-
-            if (errString.includes('chưa được tải')) {
-                showToast("⚠️ SDK RichAds chưa tải xong. Ông đợi xíu rồi bấm lại nhé!", "error");
-            } else {
-                showToast("❌ Không có quảng cáo hoặc bạn tắt sớm rùi!", "error");
-            }
-            startAdCooldown(watchAdBtn2, 20, btnText); 
         });
     });
 }
@@ -626,22 +540,22 @@ const btnLeaderboard = document.getElementById("btn-leaderboard");
 const inlineLeaderboardContainer = document.getElementById("inline-leaderboard-container");
 const btnBackLeaderboard = document.getElementById("btn-back-leaderboard");
 
-function renderLeaderboard(leaderboardData) {
-    const leaderboardList = document.getElementById("leaderboard-list");
-    if (!leaderboardList) return;
-    leaderboardList.innerHTML = "";
+// Thay thế hàm renderLeaderboard hiện tại bằng hàm này
+function renderLeaderboardData(listId, dataArray) {
+    const listElement = document.getElementById(listId);
+    if (!listElement) return;
+    listElement.innerHTML = "";
 
-    leaderboardData.forEach((user) => {
+    if(dataArray.length === 0) {
+        listElement.innerHTML = `<div style="text-align:center; padding: 20px; color: var(--text-muted);">Chưa có dữ liệu.</div>`;
+        return;
+    }
+
+    dataArray.forEach((user) => {
         let rankIcon = user.rank === 1 ? "🥇" : user.rank === 2 ? "🥈" : user.rank === 3 ? "🥉" : `<span style='display: inline-block; width: 22px; text-align: center; color: var(--text-muted); font-weight: bold;'>${user.rank}.</span>`;
         let displayName = user.name;
 
         const li = document.createElement("li");
-        if (user.rank === 10) {
-            li.style.borderBottom = "none";
-            li.style.paddingBottom = "0";
-        }
-
-        // Fix CSS Grid: Tỉ lệ chuẩn 50% - 15% - 35% và ép không tràn text
         li.style.display = "grid";
         li.style.gridTemplateColumns = "50% 15% 35%";
         li.style.alignItems = "center";
@@ -653,10 +567,18 @@ function renderLeaderboard(leaderboardData) {
                 <span style="font-weight: 600; color: var(--text-main); font-size: 14px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; display: block; width: 100%;">${displayName}</span>
             </div>
             <div style="text-align: center; color: var(--color-blue); font-size: 13px; font-weight: 600;">Lv ${user.level}</div>
-            <div style="text-align: right; color: var(--color-gold); font-size: 14px; font-weight: 700;">${user.xu.toLocaleString()} Xu</div>
+            <div style="text-align: right; color: var(--color-gold); font-size: 13px; font-weight: 700;">${user.score}</div>
         `;
-        leaderboardList.appendChild(li);
+        listElement.appendChild(li);
     });
+}
+
+function switchLbTab(tabId) {
+    document.querySelectorAll('.lb-content').forEach(tab => tab.style.display = 'none');
+    document.querySelectorAll('.lb-tab-btn').forEach(btn => btn.classList.remove('active'));
+    
+    document.getElementById(tabId).style.display = 'block';
+    event.currentTarget.classList.add('active');
 }
 
 if (btnLeaderboard) {
