@@ -826,3 +826,23 @@ button:active {
 
 .btn-channel { background: #0088cc; color: white; } /* Màu xanh Telegram */
 .btn-chat { background: #34d399; color: white; }    /* Màu xanh lá */
+
+.btn-do-task {
+    background: #ffffff;      /* Màu nền trắng */
+    color: #856404;           /* Màu chữ nâu vàng */
+    border: 1px solid #ffeeba;
+    padding: 5px 15px;
+    border-radius: 20px;      /* Bo tròn nút */
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.2s;
+    display: inline-block;
+    margin-left: 10px;        /* Cách chữ một chút */
+}
+
+.btn-do-task:active {
+    transform: scale(0.95);
+    background: #f8f9fa;
+}

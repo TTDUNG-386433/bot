@@ -771,7 +771,7 @@ function renderTaskList(tasksData) {
         if (isCompleted) {
             linkActionHTML = `<span style="color: var(--text-muted); text-decoration: line-through; cursor: not-allowed;">🔒 Đã vượt xong</span>`;
         } else {
-            linkActionHTML = `<span onclick="startTaskAndOpen(${task.id}, '${task.link}')" style="color: var(--color-blue); text-decoration: underline; cursor: pointer;">Nhấn để vượt link</span>`;
+            linkActionHTML = `<button onclick="startTaskAndOpen(${task.id}, '${task.link}')" class="btn-do-task">Làm vượt link</button>`;
         }
 
         const taskHTML = `
