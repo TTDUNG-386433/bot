@@ -1108,16 +1108,7 @@ if (btnUpgrade) {
                 } else if (d.success) {
                     showToast(`🎉 Bạn vừa thăng cấp lên Lv ${d.new_level}! Tốc độ máy đào đã tăng.`, "success");
                     
-                    currentLevel = d.new_level;
-                    currentXu = d.new_xu; 
-                    document.getElementById("user-level").innerText = `Lv ${d.new_level}`;
-                    document.getElementById("user-exp").innerText = d.new_level >= 20 ? "MAX LEVEL" : `${d.new_exp}/${d.new_exp_required}`;
-                    document.getElementById("mining-speed").innerText = `${d.new_speed.toLocaleString()} Xu/giờ`;
-                    document.getElementById("xu-balance").innerText = currentXu.toLocaleString();
-                    document.getElementById("vnd-balance").innerText = (currentXu / 100).toLocaleString();
-                    
-                    miningSpeed = d.new_speed; 
-                    checkLevelUp(d.new_exp, d.new_exp_required, d.new_level);
+                    loadRealData();
                 }
             } catch (err) {
                 showToast("❌ Lỗi kết nối mạng, không thể nâng cấp lúc này!", "error");
