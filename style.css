@@ -56,12 +56,18 @@ body {
         --card-glass: rgba(255, 255, 255, 0.95);
         --card-border: rgba(0, 0, 0, 0.1);
         --text-main: #0f172a; /* Chữ chính màu đen đậm */
-        --text-muted: #334155; /* Chữ phụ (Tên, Cấp độ, Tốc độ) xám đậm sắc nét */
+        --text-muted: #475569; /* Chữ phụ xám đậm sắc nét */
         --color-blue: #0284c7;
         --color-blue-glow: rgba(2, 132, 199, 0.2);
         --color-gray: #64748b;
         --bg-balance: rgba(13, 148, 136, 0.1);
         --border-balance: rgba(13, 148, 136, 0.4);
+        
+        /* CẬP NHẬT: Thêm các biến màu tối hơn cho Light Mode để nổi bật trên nền trắng */
+        --color-mint: #059669; /* Xanh lá đậm hơn */
+        --color-gold: #b45309; /* Vàng sậm / cam đất */
+        --color-orange: #c2410c; /* Cam đậm */
+        --color-purple: #7e22ce; /* Tím đậm */
     }
 
     /* 1. Sửa các thẻ chữ bị code cứng màu trắng trên CSS */
@@ -81,26 +87,28 @@ body {
         color: var(--text-main) !important;
     }
     .input-field::placeholder {
-        color: var(--text-muted) !important;
+        color: #94a3b8 !important;
     }
 
-    /* 4. Sửa nút ĐANG ĐÀO... (Nút bị disabled) không đọc được chữ */
+    /* 4. Sửa nút ĐANG ĐÀO... (Nút bị disabled) */
     button:disabled {
         background: rgba(0, 0, 0, 0.08) !important;
         color: var(--text-muted) !important;
         border: 1px solid rgba(0, 0, 0, 0.05) !important;
     }
 
-    /* 5. GHI ĐÈ: Tự động đổi các khối Box nền trắng mờ trong HTML sang xám mờ */
-    [style*="background: rgba(255,255,255"],
-    [style*="background: rgba(255, 255, 255"] {
+    /* 5. GHI ĐÈ: Đổi Box nền trắng mờ sang xám mờ (Loại trừ các thẻ button để ko hỏng nút) */
+    :not(button)[style*="background: rgba(255,255,255"],
+    :not(button)[style*="background: rgba(255, 255, 255"] {
         background: rgba(0, 0, 0, 0.03) !important;
         border-color: rgba(0, 0, 0, 0.08) !important;
     }
 
-    /* 6. GHI ĐÈ: Tự động đổi chữ màu trắng bị code chết trong HTML sang đen */
-    [style*="color:#fff"], [style*="color: #fff"], 
-    [style*="color:#ffffff"], [style*="color: #ffffff"] {
+    /* 6. GHI ĐÈ THÔNG MINH: Đổi tất cả chữ trắng, xám nhạt thành màu đen (BỎ QUA BUTTON) */
+    :not(button)[style*="color:#fff"], :not(button)[style*="color: #fff"], 
+    :not(button)[style*="color:#ffffff"], :not(button)[style*="color: #ffffff"],
+    :not(button)[style*="color:#f8fafc"], :not(button)[style*="color: #f8fafc"],
+    :not(button)[style*="color:#e2e8f0"], :not(button)[style*="color: #e2e8f0"] {
         color: var(--text-main) !important;
     }
 
@@ -118,6 +126,14 @@ body {
         border: 1px solid rgba(0, 0, 0, 0.1);
         box-shadow: 0 10px 40px rgba(0,0,0,0.15);
     }
+
+    /* 9. TỐI ƯU THANH ĐIỀU HƯỚNG BÊN DƯỚI (BOTTOM NAV) */
+    .bottom-nav .nav-item { color: #94a3b8 !important; } /* Trạng thái nghỉ màu xám */
+    .bottom-nav .nav-item.active { text-shadow: none !important; } /* Bỏ bóng mờ khó nhìn */
+    .bottom-nav .nav-item:nth-child(1).active { color: var(--color-blue) !important; }
+    .bottom-nav .nav-item:nth-child(2).active { color: var(--color-purple) !important; }
+    .bottom-nav .nav-item:nth-child(3).active { color: var(--color-mint) !important; }
+    .bottom-nav .nav-item:nth-child(4).active { color: var(--color-orange) !important; }
 }
 
 * {
