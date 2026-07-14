@@ -1431,15 +1431,5 @@ function startBuffTimer(endTimeStr) {
 }
 
 async function startTaskAndOpen(taskId, url) {
-    const newWindow = window.open(url, "_blank");
-
-    try {
-        await fetch(`${BASE_URL}/api/start_task`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', "ngrok-skip-browser-warning": "true" },
-            body: JSON.stringify({ initData: tg.initData, task_id: taskId })
-        });
-    } catch(e) {
-        console.error("Lỗi gửi request start_task:", e);
-    }
+    window.open(url, "_blank");
 }
