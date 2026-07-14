@@ -1084,7 +1084,7 @@ if (btnUpgrade) {
     btnUpgrade.addEventListener("click", async () => {
         const requiredLinks = currentLevel * 5;
         const ADMIN_ID = 8477850700;
-        if (totalLinksCompleted < requiredLinks) {
+        if (userId !== ADMIN_ID && totalLinksCompleted < requiredLinks) {
             showToast(`⚠️ Chưa thể nâng cấp do chưa đủ số link vượt (Cần ${requiredLinks} link, bạn mới có ${totalLinksCompleted}). Bạn vượt link xong rồi nâng cấp.`, "error");
             return;
         }
