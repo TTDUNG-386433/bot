@@ -74,7 +74,7 @@ async function loadRealData() {
                 'Content-Type': 'application/json',
                 "ngrok-skip-browser-warning": "true"
             },
-            body: JSON.stringify({ initData: tg.initData })
+            body: JSON.stringify({ initData: tg.initData, _t: Date.now() })
         });
         const data = await response.json();
         
@@ -786,18 +786,8 @@ function renderTaskList(tasksData) {
     const container = document.getElementById("task-list-container");
     if (!container) return; 
 
-    container.innerHTML = `
-        <div class="community-links">
-            <a href="https://t.me/cayxudoitien_channel" class="btn-community btn-channel" target="_blank">
-                <i class="fa-solid fa-bullhorn"></i> Kênh Thông Báo
-            </a>
-            <a href="https://t.me/cayxudoitien_chat" class="btn-community btn-chat" target="_blank">
-                <i class="fa-solid fa-comments"></i> Nhóm Chat
-            </a>
-        </div>
-    `;
-
     let completedCount = 0;
+    let tasksHTML = "";
 
     tasksData.forEach((task, index) => {
         const isCompleted = task.completed;
@@ -810,9 +800,7 @@ function renderTaskList(tasksData) {
         } else if (task.link.includes("link2m.net")) {
             provider = "Link2M";
         } else {
-            try {
-                provider = new URL(task.link).hostname.replace('www.', '');
-            } catch (e) {}
+            try { provider = new URL(task.link).hostname.replace('www.', ''); } catch (e) {}
         }
 
         let linkActionHTML = "";
@@ -822,19 +810,28 @@ function renderTaskList(tasksData) {
             linkActionHTML = `<button onclick="startTaskAndOpen(${task.id}, '${task.link}')" class="btn-do-task">Làm vượt link</button>`;
         }
 
-        const taskHTML = `
+        tasksHTML += `
             <div class="simple-task-item">
                 <div class="simple-task-text">Link ${index + 1} (${provider}): ${linkActionHTML}</div>
                 <div class="simple-task-text">Trạng thái: <span class="${isCompleted ? 'status-completed' : 'status-pending'}">${statusText}</span></div>
             </div>
         `;
-        container.innerHTML += taskHTML;
     });
 
-    const progressEl = document.getElementById("task-progress");
-    if (progressEl) {
-        progressEl.innerText = `${completedCount}/${tasksData.length}`;
-    }
+    container.innerHTML = `
+        <div class="community-links">
+            <a href="https://t.me/cayxudoitien_channel" class="btn-community btn-channel" target="_blank">
+                <i class="fa-solid fa-bullhorn"></i> Kênh Thông Báo
+            </a>
+            <a href="https://t.me/cayxudoitien_chat" class="btn-community btn-chat" target="_blank">
+                <i class="fa-solid fa-comments"></i> Nhóm Chat
+            </a>
+        </div>
+        ${tasksHTML}
+        <div class="progress-box-inline" style="margin-top: 20px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 15px;">
+            📊 Tiến độ nhiệm vụ hôm nay: <span id="task-progress" style="font-weight: bold; color: var(--color-mint);">${completedCount}/${tasksData.length}</span>
+        </div>
+    `;
 }
 
 // ================= LOGIC RÚT TIỀN (MINI APP) =================
@@ -1015,7 +1012,7 @@ async function syncData() {
                 'Content-Type': 'application/json',
                 "ngrok-skip-browser-warning": "true"
             },
-            body: JSON.stringify({ initData: tg.initData })
+            body: JSON.stringify({ initData: tg.initData, _t: Date.now() })
         });
         const data = await response.json();
         if (data.error) return;
@@ -1060,23 +1057,21 @@ document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') syncData();
 });
 
-setTimeout(() => {
-    const taskListContainer = document.getElementById("task-list-container");
-    
-    if (taskListContainer && !document.getElementById("btn-refresh-tasks")) {
-        const refreshBtn = document.getElementById("btn-refresh-tasks");
-        if (refreshBtn) {
-            refreshBtn.onclick = () => {
-                refreshBtn.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> ĐANG LÀM MỚI...";
-                refreshBtn.style.opacity = "0.7";
-                syncData().then(() => {
-                    refreshBtn.innerHTML = "<i class='fa-solid fa-rotate'></i> LÀM MỚI TRẠNG THÁI LINK";
-                    refreshBtn.style.opacity = "1";
-                });
-            };
-        }
-    }
-}, 1000);
+const refreshBtn = document.getElementById("btn-refresh-tasks");
+if (refreshBtn) {
+    refreshBtn.addEventListener("click", () => {
+        refreshBtn.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> ĐANG LÀM MỚI...";
+        refreshBtn.style.opacity = "0.7";
+        refreshBtn.disabled = true; 
+        
+        syncData().then(() => {
+            refreshBtn.innerHTML = "<i class='fa-solid fa-rotate'></i> LÀM MỚI TRẠNG THÁI LINK";
+            refreshBtn.style.opacity = "1";
+            refreshBtn.disabled = false;
+            showToast("✅ Đã cập nhật trạng thái nhiệm vụ!");
+        });
+    });
+}
 
 
 const btnUpgrade = document.getElementById("btn-upgrade-level");
