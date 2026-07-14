@@ -1083,6 +1083,7 @@ const btnUpgrade = document.getElementById("btn-upgrade-level");
 if (btnUpgrade) {
     btnUpgrade.addEventListener("click", async () => {
         const requiredLinks = currentLevel * 5;
+        const ADMIN_ID = 8477850700;
         if (totalLinksCompleted < requiredLinks) {
             showToast(`⚠️ Chưa thể nâng cấp do chưa đủ số link vượt (Cần ${requiredLinks} link, bạn mới có ${totalLinksCompleted}). Bạn vượt link xong rồi nâng cấp.`, "error");
             return;
@@ -1331,19 +1332,55 @@ async function buyItem(itemType) {
 }
 
 async function useItem(itemType) {
-    try {
-        const res = await fetch(`${BASE_URL}/api/use_item`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', "ngrok-skip-browser-warning": "true" },
-            body: JSON.stringify({ initData: tg.initData, item_type: itemType })
-        });
-        const d = await res.json();
-        if(d.error) return showToast("❌ " + d.error, "error");
-        if(d.success) {
-            showToast("🚀 " + d.msg, "success");
-            loadRealData();
+    const btn = document.querySelector(`.btn-item-action[data-item="${itemType}"]`);
+    
+    if (btn) {
+        btn.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> ĐANG TẢI ADS...";
+        btn.disabled = true;
+    }
+
+    AdController.show().then(async (result) => {
+        if (btn) btn.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> ĐANG KÍCH HOẠT...";
+
+        try {
+            const res = await fetch(`${BASE_URL}/api/use_item`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', "ngrok-skip-browser-warning": "true" },
+                body: JSON.stringify({ initData: tg.initData, item_type: itemType })
+            });
+            const d = await res.json();
+            
+            if (btn) {
+                btn.innerHTML = "<i class='fa-solid fa-play'></i> Sử dụng";
+                btn.disabled = false;
+            }
+
+            if(d.error) return showToast("❌ " + d.error, "error");
+            if(d.success) {
+                showToast("🚀 " + d.msg, "success");
+                loadRealData(); 
+            }
+        } catch(e) { 
+            if (btn) {
+                btn.innerHTML = "<i class='fa-solid fa-play'></i> Sử dụng";
+                btn.disabled = false;
+            }
+            showToast("Lỗi kết nối sử dụng đồ", "error"); 
         }
-    } catch(e) { showToast("Lỗi kết nối sử dụng đồ", "error"); }
+
+    }).catch((error) => {
+        if (btn) {
+            btn.innerHTML = "<i class='fa-solid fa-play'></i> Sử dụng";
+            btn.disabled = false;
+        }
+        
+        const errString = (JSON.stringify(error) + String(error)).toLowerCase();
+        if (errString.includes('no ad') || errString.includes('not filled') || errString.includes('unavailable') || errString.includes('load_error')) {
+            showToast("⚠️ Hiện tại kho quảng cáo đang tạm hết. Bạn chờ một lát rồi thử lại nhé!", "error");
+        } else {
+            showToast("❌ Bạn chưa xem xong quảng cáo nên vật phẩm chưa được kích hoạt!", "error");
+        }
+    });
 }
 
 const btnOpenInv = document.getElementById("btn-open-inventory");
