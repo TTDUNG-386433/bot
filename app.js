@@ -930,6 +930,8 @@ if (btnSubmitBank) {
                 document.getElementById("bank-name").value = "";
                 document.getElementById("bank-stk").value = "";
                 document.getElementById("bank-fullname").value = "";
+
+                loadRealData();
             }
         } catch (err) {
             showToast("❌ Lỗi kết nối mạng, vui lòng thử lại sau!");
@@ -989,6 +991,8 @@ if (btnSubmitMomo) {
                 document.getElementById("momo-amount").value = "";
                 document.getElementById("momo-phone").value = "";
                 document.getElementById("momo-fullname").value = "";
+
+                loadRealData();
             }
         } catch (err) {
             showToast("❌ Lỗi kết nối mạng, vui lòng thử lại sau!");
@@ -1044,6 +1048,14 @@ async function syncData() {
         }
 
         renderTaskList(data.tasks);
+
+        renderLeaderboardData("lb-xu", data.leaderboard_xu);
+        renderLeaderboardData("lb-link", data.leaderboard_link);
+        renderLeaderboardData("lb-ads", data.leaderboard_ads);
+        const rankInfo = document.getElementById("my-rank-info");
+        if (rankInfo) {
+            rankInfo.innerHTML = `Thứ hạng của bạn: <span style="color: #fff; font-size: 16px;">#${data.user.user_rank}</span> (💰 ${data.user.xu.toLocaleString()} Xu)`;
+        }
 
     } catch (err) {
         console.error("Lỗi đồng bộ ngầm:", err);
