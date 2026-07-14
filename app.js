@@ -1431,5 +1431,5 @@ function startBuffTimer(endTimeStr) {
 }
 
 async function startTaskAndOpen(taskId, url) {
-    window.open(url, "_blank");
+    tg.openLink(url);
 }
