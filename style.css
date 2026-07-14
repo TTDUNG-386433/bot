@@ -112,18 +112,18 @@ body {
         color: var(--text-main) !important;
     }
 
-    /* 7. Nút Quay Lại */
+    /* 7. Nút Quay Lại - Tối ưu cho chế độ Sáng (Light Mode) */
     button[id^="btn-back-"], .btn-back-wd {
-        background: #e2e8f0 !important; /* Nền xám đặc nổi bật hẳn lên */
-        color: #0f172a !important; /* Chữ đen đậm rõ ràng */
-        border: 1px solid #94a3b8 !important; /* Viền xám đậm hơn để chia khối */
-        font-weight: 700 !important; /* In đậm chữ */
-        box-shadow: 0 2px 6px rgba(0,0,0,0.08) !important; /* Đổ bóng nhẹ cho nút lồi lên */
+        background: #1e293b !important; /* Xanh Navy cực đậm */
+        color: #ffffff !important;      /* Chữ trắng tinh */
+        border: 1px solid #0f172a !important; /* Viền đen bao quanh */
+        font-weight: 700 !important;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.2) !important; /* Đổ bóng đậm hơn để nút "nổi" trên nền */
     }
     
-    /* Thêm hiệu ứng khi bấm cho nút quay lại ở nền sáng */
+    /* Hiệu ứng khi bấm vào */
     button[id^="btn-back-"]:active, .btn-back-wd:active {
-        background: #cbd5e1 !important;
+        background: #334155 !important; /* Nhạt đi một chút khi chạm */
     }
 
     /* 8. Bảng thông báo Toast (Popup góc dưới) */
