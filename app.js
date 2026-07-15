@@ -7,6 +7,7 @@ const userId = tg.initDataUnsafe?.user?.id || 0;
 
 let miningInterval;
 let userAdsWatched = 0;   
+let userAdsWatched2 = 0;
 let userLinksCompleted = 0; 
 let dailySpins = 0;         
 const MAX_DAILY_SPINS = 5;  
@@ -95,6 +96,7 @@ async function loadRealData() {
         userAdsWatched = adCount; 
         let invitedCount = data.user.invited_count || 0;
         let adCount2 = data.user.ad_count_2 || 0;
+        userAdsWatched2 = adCount2;
 
         if(document.getElementById("display-ads-watched-2")) document.getElementById("display-ads-watched-2").innerText = adCount2;
         if(document.getElementById("invited-count")) document.getElementById("invited-count").innerText = invitedCount;
