@@ -441,7 +441,7 @@ if (watchAdBtn2) {
 
         // Gọi hàm SDK của Monetag với tham số 'pop'
         if (typeof show_11281414 === 'function') {
-            show_11281414('pop').then(async () => {
+            show_11281414().then(async () => {
                 watchAdBtn2.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> ĐANG NHẬN THƯỞNG...";
 
                 try {

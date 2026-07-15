@@ -14,8 +14,6 @@
 <body>
 
     <div class="app-container">
-        
-        <!-- ================= TAB 1: TRANG CHỦ ================= -->
         <div id="tab-home" class="tab-content active">
             <div class="header"><i class="fa-solid fa-bolt"></i> BOT ĐÀO XU MINI APP</div>
             
@@ -61,14 +59,13 @@
             </div>
         </div>
 
-        <!-- ================= TAB 2: NHIỆM VỤ ================= -->
         <div id="tab-tasks" class="tab-content">
             <div class="header"><i class="fa-solid fa-gamepad"></i> NHIỆM VỤ KIẾM XU</div>
             <div class="card">
             <h3 style="margin-bottom: 12px;"><i class="fa-solid fa-circle-dollar-to-slot"></i> NHIỆM VỤ & KIẾM THÊM</h3>
             
             <button id="btn-watch-ad" class="btn-orange"><i class="fa-solid fa-tv"></i> NGUỒN 1 - ADSGRAM (<span id="display-ads-watched">0</span>/30)</button>
-            <!-- <button id="btn-watch-ad-2" class="btn-purple" style="margin-top: 10px;"><i class="fa-solid fa-play"></i> NGUỒN 2 - MONETAG (<span id="display-ads-watched-2">0</span>/30)</button> -->
+            <button id="btn-watch-ad-2" class="btn-purple" style="margin-top: 10px;"><i class="fa-solid fa-play"></i> NGUỒN 2 - MONETAG (<span id="display-ads-watched-2">0</span>/30)</button>
 
             <div id="task-list-container" class="task-list-container">
 
@@ -149,9 +146,7 @@
                     <div id="wheel-result" style="margin-top: 15px; font-size: 15px; font-weight: bold; color: var(--color-mint); min-height: 20px; opacity: 0; transition: opacity 0.3s ease;"></div>
                 </div>
 
-                <!-- KHU VỰC 3: ĐIỂM DANH HÀNG NGÀY (Ẩn mặc định) -->
                 <div id="inline-attendance-container" style="display: none; text-align: center;">
-                    <!-- Thanh tiêu đề -->
                     <div style="margin-bottom: 25px;">
                         <div style="text-align: left; margin-bottom: 15px;">
                             <button id="btn-back-attendance" style="width: auto; padding: 6px 12px; font-size: 13px; background: rgba(255,255,255,0.1); border-radius: 8px; box-shadow: none;"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
@@ -159,7 +154,6 @@
                         <h3 style="margin-bottom: 0; color: #ec4899; justify-content: center;"><i class="fa-solid fa-calendar-check"></i> ĐIỂM DANH</h3>
                     </div>
                     
-                    <!-- Bảng danh sách các ngày -->
                     <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 15px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.08);">
                         <ul class="info-list" id="attendance-list" style="text-align: left; margin-bottom: 0;">
                             <li data-day="1"><span class="label-text"><i class="fa-regular fa-calendar"></i> Thứ 2</span><span class="val">500 Xu + 10 EXP <span class="status-icon"></span></span></li>
@@ -188,7 +182,6 @@
                             Tiến độ: <span id="attendance-progress" style="color: var(--color-mint); font-size: 16px;">0/7</span> ngày
                         </div>
                         
-                        <!-- Nút này mặc định bị khóa (màu xám) -->
                         <button id="btn-claim-weekly" class="btn-gray" disabled style="padding: 12px; font-size: 14px; width: 100%; border-radius: 10px;">
                             <i class="fa-solid fa-lock"></i> CHƯA ĐỦ ĐIỀU KIỆN
                         </button>
@@ -204,7 +197,6 @@
                         <h3 style="margin-bottom: 0; color: var(--color-gold); justify-content: center;"><i class="fa-solid fa-trophy"></i> BẢNG XẾP HẠNG</h3>
                     </div>
 
-                    <!-- Thanh điều hướng Tab bên trong BXH -->
                     <div class="lb-tabs">
                         <button class="lb-tab-btn active" onclick="switchLbTab('lb-xu')">💰 Top Xu</button>
                         <button class="lb-tab-btn" onclick="switchLbTab('lb-link')">🔗 Top Link</button>
@@ -212,18 +204,11 @@
                         <button class="lb-tab-btn" onclick="switchLbTab('lb-rewards')" style="color: #ec4899;">🎁 Thưởng</button>
                     </div>
                     
-                    <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 15px; border: 1px solid rgba(255,255,255,0.08); margin-top: 15px;">
-                        
-                        <!-- Danh sách Top Xu -->
-                        <ul class="info-list lb-content active" id="lb-xu" style="text-align: left; margin-bottom: 0;"></ul>
-                        
-                        <!-- Danh sách Top Link -->
+                    <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 15px; border: 1px solid rgba(255,255,255,0.08); margin-top: 15px;"> 
+                        <ul class="info-list lb-content active" id="lb-xu" style="text-align: left; margin-bottom: 0;"></ul> 
                         <ul class="info-list lb-content" id="lb-link" style="text-align: left; margin-bottom: 0; display: none;"></ul>
-                        
-                        <!-- Danh sách Top Ads -->
                         <ul class="info-list lb-content" id="lb-ads" style="text-align: left; margin-bottom: 0; display: none;"></ul>
 
-                        <!-- Giao diện Phần Thưởng bám sát ảnh -->
                         <div class="lb-content" id="lb-rewards" style="display: none; text-align: left;">
                             <h4 style="color: #f8fafc; font-size: 14px; margin-bottom: 15px;"><i class="fa-solid fa-gift" style="color: #f43f5e;"></i> Thưởng Top Sự Kiện Tuần (Xu & Link)</h4>
                             <div class="reward-item">
@@ -290,7 +275,6 @@
                     </div>
                 </div>
 
-                <!-- ================= KHU VỰC 5: GIFT CODE ================= -->
                 <div id="inline-giftcode-container" style="display: none; text-align: center;">
                     <div style="margin-bottom: 25px;">
                         <div style="text-align: left; margin-bottom: 15px;">
@@ -310,8 +294,6 @@
                         <i class="fa-solid fa-check-circle"></i> XÁC NHẬN MÃ
                     </button>
                 </div>
-
-                <!-- ================= KHU VỰC 6: KHO VẬT PHẨM (MỚI) ================= -->
                 <div id="inline-inventory-container" style="display: none; text-align: center;">
                     <div style="margin-bottom: 20px;">
                         <div style="text-align: left; margin-bottom: 15px;">
@@ -320,7 +302,6 @@
                         <h3 style="margin-bottom: 0; color: #34d399; justify-content: center;"><i class="fa-solid fa-box-open"></i> KHO VẬT PHẨM & CỬA HÀNG</h3>
                     </div>
 
-                    <!-- Item 1 -->
                     <div class="item-shop-card" style="background: rgba(255,255,255,0.04); border-radius:12px; padding:15px; margin-bottom:12px; border:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center;">
                         <div style="text-align:left; flex: 1; padding-right: 10px;">
                             <div style="font-weight:bold; font-size:14px; color:#fff;"><i class="fa-solid fa-bolt" style="color:#facc15;"></i> Thẻ x2 Đào (1 Giờ) <span style="color: var(--text-muted); font-size: 12px; font-weight: normal;">- 20K Xu</span></div>
@@ -330,7 +311,6 @@
                         <button class="btn-item-action btn-primary" data-item="b1h" style="width:auto; padding:8px 14px; font-size:12px; border-radius:8px;"><i class="fa-solid fa-cart-shopping"></i> Mua 20K Xu</button>
                     </div>
 
-                    <!-- Item 2 -->
                     <div class="item-shop-card" style="background: rgba(255,255,255,0.04); border-radius:12px; padding:15px; margin-bottom:12px; border:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center;">
                         <div style="text-align:left; flex: 1; padding-right: 10px;">
                             <div style="font-weight:bold; font-size:14px; color:#fff;"><i class="fa-solid fa-bolt" style="color:#facc15;"></i> Thẻ x2 Đào (2 Giờ) <span style="color: var(--text-muted); font-size: 12px; font-weight: normal;">- 30K Xu</span></div>
@@ -340,7 +320,6 @@
                         <button class="btn-item-action btn-primary" data-item="b2h" style="width:auto; padding:8px 14px; font-size:12px; border-radius:8px;"><i class="fa-solid fa-cart-shopping"></i> Mua 30K Xu</button>
                     </div>
 
-                    <!-- Item 3 -->
                     <div class="item-shop-card" style="background: rgba(255,255,255,0.04); border-radius:12px; padding:15px; margin-bottom:12px; border:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center;">
                         <div style="text-align:left; flex: 1; padding-right: 10px;">
                             <div style="font-weight:bold; font-size:14px; color:#fff;"><i class="fa-solid fa-bolt" style="color:#facc15;"></i> Thẻ x2 Đào (4 Giờ) <span style="color: var(--text-muted); font-size: 12px; font-weight: normal;">- 50K Xu</span></div>
@@ -350,7 +329,6 @@
                         <button class="btn-item-action btn-primary" data-item="b4h" style="width:auto; padding:8px 14px; font-size:12px; border-radius:8px;"><i class="fa-solid fa-cart-shopping"></i> Mua 50K Xu</button>
                     </div>
 
-                    <!-- Item 4 -->
                     <div class="item-shop-card" style="background: rgba(255,255,255,0.04); border-radius:12px; padding:15px; margin-bottom:12px; border:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center;">
                         <div style="text-align:left; flex: 1; padding-right: 10px;">
                             <div style="font-weight:bold; font-size:14px; color:#fff;"><i class="fa-solid fa-shield-halved" style="color:#ec4899;"></i> Bảo Hiểm Streak <span style="color: var(--text-muted); font-size: 12px; font-weight: normal;">- 10K Xu</span></div>
@@ -364,7 +342,6 @@
             </div>
         </div>
 
-        <!-- ================= TAB 3: RÚT TIỀN ================= -->
         <div id="tab-withdraw" class="tab-content">
             <div class="header"><i class="fa-solid fa-money-bill-transfer"></i> RÚT TIỀN AN TOÀN</div>
             
@@ -442,7 +419,6 @@
             </div>
         </div>
 
-        <!-- ================= BOTTOM NAVIGATION BAR ================= -->
         <div class="bottom-nav">
             <div class="nav-item active" onclick="switchTab('tab-home')">
                 <i class="fa-solid fa-house"></i>
@@ -463,10 +439,6 @@
         </div>
 
     </div>
-
-    <!-- ================= GIAO DIỆN VÒNG QUAY MAY MẮN ================= -->
-
-    <!-- File Javascript riêng biệt -->
     <script src="app.js"></script>
 </body>
 </html>
