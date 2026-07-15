@@ -94,7 +94,9 @@ async function loadRealData() {
         let adCount = data.user.ad_count || 0;
         userAdsWatched = adCount; 
         let invitedCount = data.user.invited_count || 0;
+        let adCount2 = data.user.ad_count_2 || 0;
 
+        if(document.getElementById("display-ads-watched-2")) document.getElementById("display-ads-watched-2").innerText = adCount2;
         if(document.getElementById("invited-count")) document.getElementById("invited-count").innerText = invitedCount;
         if(document.getElementById("display-ads-watched")) document.getElementById("display-ads-watched").innerText = userAdsWatched;
         if(document.getElementById("display-extra-spins")) document.getElementById("display-extra-spins").innerText = extraSpins;
@@ -421,6 +423,69 @@ if (watchAdBtn) {
                 startAdCooldown(watchAdBtn, 20, btnText); 
             }
         });
+    });
+}
+
+const watchAdBtn2 = document.getElementById("btn-watch-ad-2");
+
+if (watchAdBtn2) {
+    watchAdBtn2.addEventListener("click", () => {
+        if (userAdsWatched2 >= 30) {
+            return showToast("⚠️ Bạn đã đạt giới hạn 30/30 lượt xem Nguồn 2 hôm nay!", "error");
+        }
+
+        watchAdBtn2.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> ĐANG TẢI QUẢNG CÁO...";
+        watchAdBtn2.disabled = true;
+
+        // Gọi hàm SDK của Monetag với tham số 'pop'
+        if (typeof show_11281414 === 'function') {
+            show_11281414('pop').then(async () => {
+                watchAdBtn2.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> ĐANG NHẬN THƯỞNG...";
+
+                try {
+                    const adUrl = `${BASE_URL}/api/watch_ad`; 
+                    const res = await fetch(adUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', "ngrok-skip-browser-warning": "true" },
+                        body: JSON.stringify({ initData: tg.initData, source: 2 }) 
+                    });
+                    const data = await res.json();
+
+                    if (data.error) {
+                        showToast("❌ " + data.error, "error");
+                    } else if (data.success) {
+                        currentXu = data.new_xu;
+                        document.getElementById("xu-balance").innerText = currentXu.toLocaleString();
+                        document.getElementById("vnd-balance").innerText = (currentXu / 100).toLocaleString();
+
+                        const levelText = document.getElementById("user-level").innerText;
+                        if (!levelText.includes("20") && !levelText.includes("MAX")) {
+                            document.getElementById("user-exp").innerText = `${data.new_exp}/${data.exp_required}`;
+                        }
+                        
+                        userAdsWatched2 = data.ad_count || 0; 
+                        if(document.getElementById("display-ads-watched-2")) document.getElementById("display-ads-watched-2").innerText = userAdsWatched2;
+
+                        showToast(`🎉 Bạn vừa nhận đc ${data.reward_xu} Xu và ${data.reward_exp} EXP từ Nguồn 2.`);
+                    }
+                } catch (err) {
+                    console.error("Lỗi API Ads Nguồn 2:", err);
+                    showToast("❌ Có lỗi mạng khi cộng thưởng!", "error");
+                }
+
+                const btnText = `<i class='fa-solid fa-video'></i> NGUỒN 2 - MONETAG (<span id="display-ads-watched-2">${userAdsWatched2}</span>/30)`;
+                startAdCooldown(watchAdBtn2, 20, btnText);
+
+            }).catch((error) => {
+                const btnText = `<i class='fa-solid fa-video'></i> NGUỒN 2 - MONETAG (<span id="display-ads-watched-2">${userAdsWatched2}</span>/30)`;
+                showToast("❌ Lỗi khi tải hoặc ông đã đóng quảng cáo sớm!", "error");
+                startAdCooldown(watchAdBtn2, 20, btnText); 
+            });
+        } else {
+            showToast("❌ Lỗi tải Script Monetag, vui lòng tải lại trang!", "error");
+            watchAdBtn2.disabled = false;
+            watchAdBtn2.innerHTML = `<i class='fa-solid fa-video'></i> NGUỒN 2 - MONETAG (<span id="display-ads-watched-2">${userAdsWatched2}</span>/30)`;
+        }
     });
 }
 
