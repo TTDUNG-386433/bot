@@ -20,6 +20,8 @@ let extraSpins = 0;
 let totalLinksCompleted = 0;
 let currentLevel = 1;
 let buffInterval;
+let hasSavedBank = false;
+let hasSavedMomo = false;
 
 function showToast(message, type = 'success') {
     if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred(type);
@@ -97,6 +99,8 @@ async function loadRealData() {
         let invitedCount = data.user.invited_count || 0;
         let adCount2 = data.user.ad_count_2 || 0;
         userAdsWatched2 = adCount2;
+        hasSavedBank = false;
+        hasSavedMomo = false;
 
         if(document.getElementById("display-ads-watched-2")) document.getElementById("display-ads-watched-2").innerText = adCount2;
         if(document.getElementById("invited-count")) document.getElementById("invited-count").innerText = invitedCount;
@@ -116,6 +120,79 @@ async function loadRealData() {
         document.getElementById("xu-balance").innerText = data.user.xu.toLocaleString();
         document.getElementById("vnd-balance").innerText = (data.user.xu / 100).toLocaleString();
         
+        const btnBank = document.getElementById("btn-wd-bank");
+        const btnMomo = document.getElementById("btn-wd-momo");
+
+        if (data.payment_info) {
+            if (data.payment_info.bank_stk) {
+                hasSavedBank = true;
+                document.getElementById("bank-inputs").style.display = "none";
+                document.getElementById("saved-bank-info").style.display = "block";
+                document.getElementById("saved-bank-text").innerText = `${data.payment_info.bank_name} - ${data.payment_info.bank_stk} - ${data.payment_info.bank_fullname}`;
+
+                if (btnMomo) btnMomo.style.display = "none";
+                if (btnBank) {
+                    btnBank.style.display = "flex";
+                    btnBank.style.gridColumn = "span 2"; 
+                    btnBank.style.width = "100%";
+                }
+            } else if (data.payment_info.momo_phone) {
+                hasSavedMomo = true;
+                document.getElementById("momo-inputs").style.display = "none";
+                document.getElementById("saved-momo-info").style.display = "block";
+                document.getElementById("saved-momo-text").innerText = `${data.payment_info.momo_phone} - ${data.payment_info.momo_fullname}`;
+
+                if (btnBank) btnBank.style.display = "none";
+                if (btnMomo) {
+                    btnMomo.style.display = "flex";
+                    btnMomo.style.gridColumn = "span 2"; 
+                    btnMomo.style.width = "100%";
+                }
+            } else {
+                hasSavedBank = false;
+                hasSavedMomo = false;
+                if (btnBank) {
+                    btnBank.style.display = "flex";
+                    btnBank.style.gridColumn = "auto";
+                    btnBank.style.width = "100%";
+                }
+                if (btnMomo) {
+                    btnMomo.style.display = "flex";
+                    btnMomo.style.gridColumn = "auto";
+                    btnMomo.style.width = "100%";
+                }
+                document.getElementById("bank-inputs").style.display = "block";
+                document.getElementById("saved-bank-info").style.display = "none";
+                document.getElementById("momo-inputs").style.display = "block";
+                document.getElementById("saved-momo-info").style.display = "none";
+            }
+        }
+
+        const wdListContainer = document.getElementById("wd-history-list");
+        if (wdListContainer && data.withdraw_history) {
+            wdListContainer.innerHTML = "";
+            if (data.withdraw_history.length === 0) {
+                wdListContainer.innerHTML = `<li style="justify-content: center; color: var(--text-muted); border: none;">Chưa có dữ liệu.</li>`;
+            } else {
+                data.withdraw_history.forEach(item => {
+                    let statusHtml = "";
+                    if (item.status === 0) statusHtml = '<span style="color: var(--color-orange); font-size: 12px;"><i class="fa-solid fa-spinner fa-spin"></i> Chờ duyệt</span>';
+                    else if (item.status === 1) statusHtml = '<span style="color: var(--color-mint); font-size: 12px;"><i class="fa-solid fa-check"></i> Thành công</span>';
+                    else statusHtml = '<span style="color: #f43f5e; font-size: 12px;"><i class="fa-solid fa-xmark"></i> Thất bại</span>';
+                    
+                    wdListContainer.innerHTML += `
+                        <li style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed rgba(255,255,255,0.1);">
+                            <div style="display: flex; flex-direction: column;">
+                                <span style="color: var(--text-main); font-weight: bold; font-size: 14px;">${item.amount.toLocaleString()} VNĐ</span>
+                                <span style="color: var(--text-muted); font-size: 11px;">${item.method} - ${item.date}</span>
+                            </div>
+                            ${statusHtml}
+                        </li>
+                    `;
+                });
+            }
+        }
+
         if (data.user.buff_active) {
             miningSpeed = data.user.speed * 2;
             document.getElementById("mining-speed").innerHTML = `<span style="color: #facc15;">${miningSpeed.toLocaleString()} Xu/giờ (Đang x2)</span>`;
@@ -339,6 +416,27 @@ function switchTab(tabId) {
 // ================= XỬ LÝ QUẢNG CÁO NGUỒN 1 & NGUỒN 2 =================
 
 const AdController = window.Adsgram.init({ blockId: "37740" });
+function playAdWithFallback(onSuccess, onUserCancel, onNoAd) {
+    AdController.show().then(() => {
+        onSuccess(); 
+    }).catch((error) => {
+        const errString = (JSON.stringify(error) + String(error)).toLowerCase();
+        if (errString.includes('no ad') || errString.includes('not filled') || errString.includes('unavailable') || errString.includes('load_error')) {
+            if (typeof show_11281414 === 'function') {
+                show_11281414().then(() => {
+                    onSuccess(); 
+                }).catch((err2) => {
+                    onNoAd(); 
+                });
+            } else {
+                onNoAd(); 
+            }
+        } else {
+            onUserCancel(); 
+        }
+    });
+}
+
 const watchAdBtn = document.getElementById("btn-watch-ad");
 
 function startAdCooldown(btn, seconds = 20, defaultText = "") {
@@ -501,9 +599,8 @@ if (btnActivate) {
         btnActivate.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> ĐANG TẢI QUẢNG CÁO...";
         btnActivate.disabled = true;
 
-        AdController.show().then(async (result) => {
+        const onSuccess = async () => {
             btnActivate.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> ĐANG KHỞI ĐỘNG MÁY...";
-            
             try {
                 const upgUrl = `${BASE_URL}/api/claim_free`;
                 const res = await fetch(upgUrl, {
@@ -527,18 +624,20 @@ if (btnActivate) {
                 btnActivate.innerHTML = "<i class='fa-solid fa-gift'></i> KÍCH HOẠT ĐÀO ";
                 btnActivate.disabled = false;
             }
+        };
 
-        }).catch((error) => {
-            const errString = (JSON.stringify(error) + String(error)).toLowerCase();
-            if (errString.includes('no ad') || errString.includes('not filled') || errString.includes('unavailable') || errString.includes('load_error')) {
-                showToast("⚠️ Hiện tại kho quảng cáo đang tạm hết. Vui lòng thử nhập mã lại sau 1 lúc nữa!", "error");
-                startAdCooldown(btnActivate, 20, "<i class='fa-solid fa-gift'></i> KÍCH HOẠT ĐÀO");
-            } else {
+        const onCancel = () => {
             showToast("❌ Bạn chưa xem xong quảng cáo hoặc lỗi mạng. Kích hoạt bị hủy!");
             btnActivate.innerHTML = "<i class='fa-solid fa-gift'></i> KÍCH HOẠT ĐÀO";
             btnActivate.disabled = false;
-            }
-        });
+        };
+
+        const onNoAd = () => {
+            showToast("⚠️ Hiện tại cả 2 kho quảng cáo đều đang tạm hết. Vui lòng thử lại sau 1 lúc nữa!", "error");
+            startAdCooldown(btnActivate, 20, "<i class='fa-solid fa-gift'></i> KÍCH HOẠT ĐÀO");
+        };
+
+        playAdWithFallback(onSuccess, onCancel, onNoAd);
     });
 }
 
@@ -778,9 +877,8 @@ if (btnDoAttendance) {
         btnDoAttendance.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> ĐANG TẢI QUẢNG CÁO...";
         btnDoAttendance.disabled = true;
 
-        AdController.show().then(async (result) => {
+        const onSuccess = async () => {
             btnDoAttendance.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> ĐANG ĐIỂM DANH...";
-            
             try {
                 const upgUrl = `${BASE_URL}/api/attendance`;
                 const res = await fetch(upgUrl, {
@@ -819,7 +917,7 @@ if (btnDoAttendance) {
                     }
 
                     if (d.is_weekly) {
-                        showToast(`🎉 ĐỈNH CHÓP! Điểm danh đủ 7 ngày. Húp trọn ${d.reward_xu.toLocaleString()} Xu & ${d.reward_exp} EXP!`);
+                        showToast(`🎉 Điểm danh đủ 7 ngày. Bạn nhận được ${d.reward_xu.toLocaleString()} Xu & ${d.reward_exp} EXP!`);
                     } else {
                         showToast(`🎉 Điểm danh thành công! Bạn nhận được ${d.reward_xu} Xu & ${d.reward_exp} EXP.`);
                     }
@@ -834,18 +932,20 @@ if (btnDoAttendance) {
                 btnDoAttendance.innerHTML = "<i class='fa-solid fa-pen-to-square'></i> ĐIỂM DANH NGAY";
                 btnDoAttendance.disabled = false;
             }
+        };
 
-        }).catch((error) => {
-            const errString = (JSON.stringify(error) + String(error)).toLowerCase();
-            if (errString.includes('no ad') || errString.includes('not filled') || errString.includes('unavailable') || errString.includes('load_error')) {
-                showToast("⚠️ Hiện tại kho quảng cáo đang tạm hết. Vui lòng thử nhập mã lại sau 1 lúc nữa!", "error");
-                startAdCooldown(btnDoAttendance, 20, "<i class='fa-solid fa-pen-to-square'></i> ĐIỂM DANH NGAY");
-            } else {
+        const onCancel = () => {
             showToast("❌ Bạn chưa xem hết quảng cáo nên không thể điểm danh nhé!");
             btnDoAttendance.innerHTML = "<i class='fa-solid fa-pen-to-square'></i> ĐIỂM DANH NGAY";
             btnDoAttendance.disabled = false;
-            }
-        });
+        };
+
+        const onNoAd = () => {
+            showToast("⚠️ Hiện tại cả 2 kho quảng cáo đều đang tạm hết. Vui lòng thử lại sau!", "error");
+            startAdCooldown(btnDoAttendance, 20, "<i class='fa-solid fa-pen-to-square'></i> ĐIỂM DANH NGAY");
+        };
+
+        playAdWithFallback(onSuccess, onCancel, onNoAd);
     });
 }
 
@@ -950,55 +1050,49 @@ if (btnWdBank && btnWdMomo) {
 if (btnSubmitBank) {
     btnSubmitBank.addEventListener("click", async () => {
         const amount = parseInt(document.getElementById("bank-amount").value);
-        const bankName = document.getElementById("bank-name").value.trim();
-        const stk = document.getElementById("bank-stk").value.trim();
-        const fullName = document.getElementById("bank-fullname").value.trim();
+        let payload = {
+            initData: tg.initData,
+            amount_vnd: amount,
+            method: "Ngân Hàng", 
+            username: tg.initDataUnsafe?.user?.username || tg.initDataUnsafe?.user?.first_name || "Ẩn danh",
+            use_saved: hasSavedBank
+        };
 
         if (!amount || amount < 2000 || amount > 10000) {
             return showToast("Số tiền rút phải từ 2,000 đến 10,000 VNĐ!");
         }
-        if (!bankName || !stk || !fullName) {
-            return showToast("Vui lòng điền đầy đủ thông tin Ngân hàng!");
+
+        if (!hasSavedBank) {
+            const bankName = document.getElementById("bank-name").value.trim();
+            const stk = document.getElementById("bank-stk").value.trim();
+            const fullName = document.getElementById("bank-fullname").value.trim();
+            if (!bankName || !stk || !fullName) {
+                return showToast("Vui lòng điền đầy đủ thông tin Ngân hàng!");
+            }
+            payload.bank_name = bankName;
+            payload.bank_stk = stk;
+            payload.bank_fullname = fullName;
         }
 
-        const formatInfo = `${bankName} - ${stk} - ${fullName.toUpperCase()}`;
-        const userName = tg.initDataUnsafe?.user?.username || tg.initDataUnsafe?.user?.first_name || "Ẩn danh";
-        
         btnSubmitBank.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> ĐANG XỬ LÝ...";
         btnSubmitBank.disabled = true;
 
         try {
-            const upgUrl = `${BASE_URL}/api/withdraw`;
-            const res = await fetch(upgUrl, {
+            const res = await fetch(`${BASE_URL}/api/withdraw`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', "ngrok-skip-browser-warning": "true" },
-                body: JSON.stringify({
-                    initData: tg.initData,
-                    amount_vnd: amount,
-                    method: "Ngân Hàng", 
-                    info: formatInfo,
-                    username: userName
-                })
+                body: JSON.stringify(payload)
             });
             const data = await res.json();
 
             if (data.error) {
                 showToast("❌ " + data.error);
             } else if (data.success) {
-                currentXu = data.new_xu;
-                document.getElementById("xu-balance").innerText = currentXu.toLocaleString();
-                document.getElementById("vnd-balance").innerText = (currentXu / 100).toLocaleString();
-                
-                showToast("✅ Lệnh rút đã được gửi! Admin đang xem xét duyệt, bạn chú ý check tin nhắn bot nhé.");
-                
+                showToast("✅ Lệnh rút đã đc gửi thành công!");
                 wdFormBank.style.display = "none";
                 wdMethodContainer.style.display = "block";
                 document.getElementById("bank-amount").value = "";
-                document.getElementById("bank-name").value = "";
-                document.getElementById("bank-stk").value = "";
-                document.getElementById("bank-fullname").value = "";
-
-                loadRealData();
+                loadRealData(); 
             }
         } catch (err) {
             showToast("❌ Lỗi kết nối mạng, vui lòng thử lại sau!");
@@ -1013,53 +1107,47 @@ if (btnSubmitBank) {
 if (btnSubmitMomo) {
     btnSubmitMomo.addEventListener("click", async () => {
         const amount = parseInt(document.getElementById("momo-amount").value);
-        const phone = document.getElementById("momo-phone").value.trim();
-        const fullName = document.getElementById("momo-fullname").value.trim();
+        let payload = {
+            initData: tg.initData,
+            amount_vnd: amount,
+            method: "Momo", 
+            username: tg.initDataUnsafe?.user?.username || tg.initDataUnsafe?.user?.first_name || "Ẩn danh",
+            use_saved: hasSavedMomo
+        };
 
         if (!amount || amount < 2000 || amount > 10000) {
             return showToast("Số tiền rút phải từ 2,000 đến 10,000 VNĐ!");
         }
-        if (!phone || !fullName) {
-            return showToast("Vui lòng điền đầy đủ số điện thoại và tên!");
+
+        if (!hasSavedMomo) {
+            const phone = document.getElementById("momo-phone").value.trim();
+            const fullName = document.getElementById("momo-fullname").value.trim();
+            if (!phone || !fullName) {
+                return showToast("Vui lòng điền đầy đủ thông tin Momo!");
+            }
+            payload.momo_phone = phone;
+            payload.momo_fullname = fullName;
         }
 
-        const formatInfo = `${phone} - ${fullName.toUpperCase()}`;
-        const userName = tg.initDataUnsafe?.user?.username || tg.initDataUnsafe?.user?.first_name || "Ẩn danh";
-        
         btnSubmitMomo.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> ĐANG XỬ LÝ...";
         btnSubmitMomo.disabled = true;
 
         try {
-            const wdUrl = `${BASE_URL}/api/withdraw`;
-            const res = await fetch(wdUrl, {
+            const res = await fetch(`${BASE_URL}/api/withdraw`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', "ngrok-skip-browser-warning": "true" },
-                body: JSON.stringify({
-                    initData: tg.initData,
-                    amount_vnd: amount,
-                    method: "Momo",
-                    info: formatInfo,
-                    username: userName
-                })
+                body: JSON.stringify(payload)
             });
             const data = await res.json();
 
             if (data.error) {
                 showToast("❌ " + data.error);
             } else if (data.success) {
-                currentXu = data.new_xu;
-                document.getElementById("xu-balance").innerText = currentXu.toLocaleString();
-                document.getElementById("vnd-balance").innerText = (currentXu / 100).toLocaleString();
-                
-                showToast("✅ Lệnh rút đã được gửi! Admin đang xem xét duyệt, bạn chú ý check tin nhắn bot nhé.");
-                
+                showToast("✅ Lệnh rút đã đc gửi thành công!");
                 wdFormMomo.style.display = "none";
                 wdMethodContainer.style.display = "block";
                 document.getElementById("momo-amount").value = "";
-                document.getElementById("momo-phone").value = "";
-                document.getElementById("momo-fullname").value = "";
-
-                loadRealData();
+                loadRealData(); 
             }
         } catch (err) {
             showToast("❌ Lỗi kết nối mạng, vui lòng thử lại sau!");
@@ -1166,9 +1254,8 @@ if (btnUpgrade) {
         btnUpgrade.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> ĐANG TẢI QUẢNG CÁO...";
         btnUpgrade.disabled = true;
 
-        AdController.show().then(async (result) => {
+        const onSuccess = async () => {
             btnUpgrade.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> ĐANG NÂNG CẤP...";
-
             try {
                 const upgUrl = `${BASE_URL}/api/upgrade`;
                 const res = await fetch(upgUrl, {
@@ -1182,7 +1269,6 @@ if (btnUpgrade) {
                     showToast("❌ " + d.error, "error");
                 } else if (d.success) {
                     showToast(`🎉 Bạn vừa thăng cấp lên Lv ${d.new_level}! Tốc độ máy đào đã tăng.`, "success");
-                    
                     loadRealData();
                 }
             } catch (err) {
@@ -1194,21 +1280,22 @@ if (btnUpgrade) {
                 btnUpgrade.innerHTML = `<i class="fa-solid fa-level-up-alt fa-bounce"></i> NÂNG CẤP LÊN LV <span id="next-level-display">${nextLvl}</span>`;
                 btnUpgrade.disabled = false;
             }
+        };
 
-        }).catch((error) => {
-            const errString = (JSON.stringify(error) + String(error)).toLowerCase();
+        const onCancel = () => {
             const nextLvl = document.getElementById("next-level-display") ? document.getElementById("next-level-display").innerText : "";
-            const btnText = `<i class="fa-solid fa-level-up-alt fa-bounce"></i> NÂNG CẤP LÊN LV <span id="next-level-display">${nextLvl}</span>`;
+            showToast("❌ Bạn chưa xem xong quảng cáo!", "error");
+            btnUpgrade.innerHTML = `<i class="fa-solid fa-level-up-alt fa-bounce"></i> NÂNG CẤP LÊN LV <span id="next-level-display">${nextLvl}</span>`;
+            btnUpgrade.disabled = false;
+        };
 
-            if (errString.includes('no ad') || errString.includes('not filled') || errString.includes('unavailable') || errString.includes('load_error')) {
-                showToast("⚠️ Hiện tại kho quảng cáo đang tạm hết. Vui lòng thử nhập mã lại sau 1 lúc nữa!", "error");
-                startAdCooldown(btnUpgrade, 20, btnText);
-            } else {
-                showToast("⚠️ Hiện đang hết video quảng cáo vui lòng thử lại sau.", "error");
-                btnUpgrade.innerHTML = btnText;
-                btnUpgrade.disabled = false;
-            }
-        });
+        const onNoAd = () => {
+            const nextLvl = document.getElementById("next-level-display") ? document.getElementById("next-level-display").innerText : "";
+            showToast("⚠️ Hiện tại cả 2 kho quảng cáo đều đang tạm hết. Vui lòng thử lại sau!", "error");
+            startAdCooldown(btnUpgrade, 20, `<i class="fa-solid fa-level-up-alt fa-bounce"></i> NÂNG CẤP LÊN LV <span id="next-level-display">${nextLvl}</span>`);
+        };
+
+        playAdWithFallback(onSuccess, onCancel, onNoAd);
     });
 }
 
@@ -1219,9 +1306,8 @@ if (btnClaimWeekly) {
         btnClaimWeekly.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> ĐANG TẢI QUẢNG CÁO...";
         btnClaimWeekly.disabled = true;
 
-        AdController.show().then(async (result) => {
+        const onSuccess = async () => {
             btnClaimWeekly.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> ĐANG MỞ RƯƠNG...";
-
             try {
                 const upgUrl = `${BASE_URL}/api/claim_weekly`;
                 const res = await fetch(upgUrl, {
@@ -1256,17 +1342,20 @@ if (btnClaimWeekly) {
                 btnClaimWeekly.innerHTML = "<i class='fa-solid fa-unlock fa-bounce'></i> NHẬN RƯƠNG THƯỞNG";
                 btnClaimWeekly.disabled = false;
             }
-        }).catch((error) => {
-            const errString = (JSON.stringify(error) + String(error)).toLowerCase();
-            if (errString.includes('no ad') || errString.includes('not filled') || errString.includes('unavailable') || errString.includes('load_error')) {
-                showToast("⚠️ Hiện tại kho quảng cáo đang tạm hết. Vui lòng thử nhập mã lại sau 1 lúc nữa!", "error");
-                startAdCooldown(btnClaimWeekly, 20, "<i class='fa-solid fa-unlock fa-bounce'></i> NHẬN RƯƠNG THƯỞNG");
-            } else {
+        };
+
+        const onCancel = () => {
             showToast("❌ Bạn chưa xem hết quảng cáo nên rương bị khóa lại nhé!");
             btnClaimWeekly.innerHTML = "<i class='fa-solid fa-unlock fa-bounce'></i> NHẬN RƯƠNG THƯỞNG";
             btnClaimWeekly.disabled = false;
-            }
-        });
+        };
+
+        const onNoAd = () => {
+            showToast("⚠️ Hiện tại cả 2 kho quảng cáo đều đang tạm hết. Vui lòng thử lại sau!", "error");
+            startAdCooldown(btnClaimWeekly, 20, "<i class='fa-solid fa-unlock fa-bounce'></i> NHẬN RƯƠNG THƯỞNG");
+        };
+
+        playAdWithFallback(onSuccess, onCancel, onNoAd);
     });
 }
 
@@ -1303,9 +1392,8 @@ if (btnSubmitGiftcode) {
         btnSubmitGiftcode.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> ĐANG TẢI QUẢNG CÁO...";
         btnSubmitGiftcode.disabled = true;
 
-        AdController.show().then(async (result) => {
+        const onSuccess = async () => {
             btnSubmitGiftcode.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> ĐANG KIỂM TRA MÃ...";
-
             try {
                 const res = await fetch(`${BASE_URL}/api/giftcode`, {
                     method: 'POST',
@@ -1333,15 +1421,13 @@ if (btnSubmitGiftcode) {
                     if (d.reward_xu > 0) rewards.push(`${d.reward_xu.toLocaleString()} Xu`);
                     if (d.reward_exp > 0) rewards.push(`${d.reward_exp} EXP`);
                     
-                    // Xử lý nối chuỗi thẻ x2
                     if (d.reward_item) {
                         let itemStr = d.reward_item === "b1h" ? "1 Giờ" : d.reward_item === "b2h" ? "2 Giờ" : "4 Giờ";
                         rewards.push(`1 Thẻ x2 (${itemStr})`);
-                        loadRealData(); // Load lại data kho đồ 
+                        loadRealData(); 
                     }
 
                     let rewardMsg = rewards.join(" & ");
-
                     showToast(`🎉 Nhập mã thành công! Bạn nhận được ${rewardMsg}.`, "success");
                     inputGiftcode.value = ""; 
                 }
@@ -1350,18 +1436,20 @@ if (btnSubmitGiftcode) {
                 btnSubmitGiftcode.disabled = false;
                 showToast("❌ Mất kết nối đến server, vui lòng thử lại!", "error");
             }
+        };
 
-        }).catch((error) => {
-            const errString = (JSON.stringify(error) + String(error)).toLowerCase();
-            if (errString.includes('no ad') || errString.includes('not filled') || errString.includes('unavailable') || errString.includes('load_error')) {
-                showToast("⚠️ Hiện tại kho quảng cáo đang tạm hết. Vui lòng thử nhập mã lại sau 1 lúc nữa!", "error");
-                startAdCooldown(btnSubmitGiftcode, 20, "<i class='fa-solid fa-check-circle'></i> XÁC NHẬN MÃ");
-            } else {
+        const onCancel = () => {
             showToast("❌ Bạn chưa xem hết quảng cáo nên mã bị hủy rồi nhé!", "error");
             btnSubmitGiftcode.innerHTML = "<i class='fa-solid fa-check-circle'></i> XÁC NHẬN MÃ";
             btnSubmitGiftcode.disabled = false;
-            }
-        });
+        };
+
+        const onNoAd = () => {
+            showToast("⚠️ Hiện tại cả 2 kho quảng cáo đều đang tạm hết. Vui lòng thử lại sau!", "error");
+            startAdCooldown(btnSubmitGiftcode, 20, "<i class='fa-solid fa-check-circle'></i> XÁC NHẬN MÃ");
+        };
+
+        playAdWithFallback(onSuccess, onCancel, onNoAd);
     });
 }
 
@@ -1413,9 +1501,8 @@ async function useItem(itemType) {
         btn.disabled = true;
     }
 
-    AdController.show().then(async (result) => {
+    const onSuccess = async () => {
         if (btn) btn.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> ĐANG KÍCH HOẠT...";
-
         try {
             const res = await fetch(`${BASE_URL}/api/use_item`, {
                 method: 'POST',
@@ -1441,20 +1528,25 @@ async function useItem(itemType) {
             }
             showToast("Lỗi kết nối sử dụng đồ", "error"); 
         }
+    };
 
-    }).catch((error) => {
+    const onCancel = () => {
         if (btn) {
             btn.innerHTML = "<i class='fa-solid fa-play'></i> Sử dụng";
             btn.disabled = false;
         }
-        
-        const errString = (JSON.stringify(error) + String(error)).toLowerCase();
-        if (errString.includes('no ad') || errString.includes('not filled') || errString.includes('unavailable') || errString.includes('load_error')) {
-            showToast("⚠️ Hiện tại kho quảng cáo đang tạm hết. Bạn chờ một lát rồi thử lại nhé!", "error");
-        } else {
-            showToast("❌ Bạn chưa xem xong quảng cáo nên vật phẩm chưa được kích hoạt!", "error");
+        showToast("❌ Bạn chưa xem xong quảng cáo nên vật phẩm chưa được kích hoạt!", "error");
+    };
+
+    const onNoAd = () => {
+        if (btn) {
+            btn.innerHTML = "<i class='fa-solid fa-play'></i> Sử dụng";
+            btn.disabled = false;
         }
-    });
+        showToast("⚠️ Hiện tại cả 2 kho quảng cáo đang tạm hết. Bạn chờ một lát rồi thử lại nhé!", "error");
+    };
+
+    playAdWithFallback(onSuccess, onCancel, onNoAd);
 }
 
 const btnOpenInv = document.getElementById("btn-open-inventory");

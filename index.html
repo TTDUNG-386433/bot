@@ -341,81 +341,104 @@
                 
             </div>
         </div>
-
-        <div id="tab-withdraw" class="tab-content">
-            <div class="header"><i class="fa-solid fa-money-bill-transfer"></i> RÚT TIỀN AN TOÀN</div>
-            
-            <div class="card" id="wd-method-container">
-                <h3 style="margin-bottom: 20px;"><i class="fa-solid fa-building-columns"></i> CHỌN PHƯƠNG THỨC</h3>
-                <div class="grid-buttons">
-                    <button id="btn-wd-bank" class="btn-primary" style="background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);"><i class="fa-solid fa-building-columns"></i> NGÂN HÀNG</button>
-                    <button id="btn-wd-momo" class="btn-pink" style="background: linear-gradient(135deg, #d946ef 0%, #a21caf 100%);"><i class="fa-solid fa-wallet"></i> VÍ MOMO</button>
-                </div>
+            <div id="tab-withdraw" class="tab-content">
+                <div class="header"><i class="fa-solid fa-money-bill-transfer"></i> RÚT TIỀN AN TOÀN</div>
                 
-                <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 15px; margin-top: 20px; border: 1px solid rgba(255,255,255,0.08);">
-                    <div style="font-size: 13px; color: var(--text-main); line-height: 1.6;">
-                        <div style="margin-bottom: 8px;">
-                            <i class="fa-solid fa-circle-info" style="color: var(--color-blue); margin-right: 5px;"></i> <b>Điều kiện rút:</b>
+                <div class="card" id="wd-method-container">
+                    <h3 style="margin-bottom: 20px;"><i class="fa-solid fa-building-columns"></i> CHỌN PHƯƠNG THỨC</h3>
+                    <div class="grid-buttons">
+                        <button id="btn-wd-bank" class="btn-primary" style="background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);"><i class="fa-solid fa-building-columns"></i> NGÂN HÀNG</button>
+                        <button id="btn-wd-momo" class="btn-pink" style="background: linear-gradient(135deg, #d946ef 0%, #a21caf 100%);"><i class="fa-solid fa-wallet"></i> VÍ MOMO</button>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 15px; margin-top: 20px; border: 1px solid rgba(255,255,255,0.08);">
+                        <div style="font-size: 13px; color: var(--text-main); line-height: 1.6;">
+                            <div style="margin-bottom: 8px;">
+                                <i class="fa-solid fa-circle-info" style="color: var(--color-blue); margin-right: 5px;"></i> <b>Điều kiện rút:</b>
+                            </div>
+                            <ul style="list-style: none; padding-left: 0; margin: 0; color: var(--text-muted);">
+                                <li style="display: flex; align-items: flex-start; gap: 6px; margin-bottom: 6px;">
+                                    <span style="flex-shrink: 0;">-</span>
+                                    <span>Yêu cầu: Đạt từ <b style="color: var(--text-main);">Lv 3</b> trở lên.</span>
+                                </li>
+                                <li style="display: flex; align-items: flex-start; gap: 6px; margin-bottom: 6px;">
+                                    <span style="flex-shrink: 0;">-</span>
+                                    <span>Nhiệm vụ: Phải vượt đủ số <b style="color: var(--text-main);">Link & Ads</b> yêu cầu.</span>
+                                </li>
+                                <li style="display: flex; align-items: flex-start; gap: 6px; margin-bottom: 0;">
+                                    <span style="flex-shrink: 0;">-</span>
+                                    <span>Hạn mức: <b style="color: var(--text-main);">2,000đ - 10,000đ</b> (1 lần/ngày).</span>
+                                </li>
+                            </ul>
                         </div>
-                        <ul style="list-style: none; padding-left: 0; margin: 0; color: var(--text-muted);">
-                            <li style="display: flex; align-items: flex-start; gap: 6px; margin-bottom: 6px;">
-                                <span style="flex-shrink: 0;">-</span>
-                                <span>Yêu cầu: Đạt từ <b style="color: var(--text-main);">Lv 3</b> trở lên.</span>
-                            </li>
-                            <li style="display: flex; align-items: flex-start; gap: 6px; margin-bottom: 6px;">
-                                <span style="flex-shrink: 0;">-</span>
-                                <span>Nhiệm vụ: Phải vượt đủ số <b style="color: var(--text-main);">Link & Ads</b> yêu cầu.</span>
-                            </li>
-                            <li style="display: flex; align-items: flex-start; gap: 6px; margin-bottom: 0;">
-                                <span style="flex-shrink: 0;">-</span>
-                                <span>Hạn mức: <b style="color: var(--text-main);">2,000đ - 10,000đ</b> (1 lần/ngày).</span>
-                            </li>
+                    </div>
+
+                    <div style="margin-top: 25px; text-align: left;">
+                        <h4 style="color: var(--color-mint); margin-bottom: 15px; font-size: 14px;"><i class="fa-solid fa-clock-rotate-left"></i> LỊCH SỬ RÚT TIỀN</h4>
+                        <ul id="wd-history-list" class="info-list" style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 15px; border: 1px solid rgba(255,255,255,0.08); max-height: 250px; overflow-y: auto;">
+                            <li style="justify-content: center; color: var(--text-muted); border: none;">Chưa có dữ liệu.</li>
                         </ul>
                     </div>
                 </div>
-            </div>
 
-            <div class="card" id="wd-form-bank" style="display: none;">
-                <div style="margin-bottom: 20px;">
-                    <div style="text-align: left; margin-bottom: 15px;">
-                        <button class="btn-back-wd" style="width: auto; padding: 6px 12px; font-size: 13px; background: rgba(255,255,255,0.1); border-radius: 8px;"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+                <div class="card" id="wd-form-bank" style="display: none;">
+                    <div style="margin-bottom: 20px;">
+                        <div style="text-align: left; margin-bottom: 15px;">
+                            <button class="btn-back-wd" style="width: auto; padding: 6px 12px; font-size: 13px; background: rgba(255,255,255,0.1); border-radius: 8px;"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+                        </div>
+                        <h3 style="margin-bottom: 0; color: #3b82f6; justify-content: center;"><i class="fa-solid fa-building-columns"></i> RÚT NGÂN HÀNG</h3>
                     </div>
-                    <h3 style="margin-bottom: 0; color: #3b82f6; justify-content: center;"><i class="fa-solid fa-building-columns"></i> RÚT NGÂN HÀNG</h3>
-                </div>
 
-                <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 20px; border: 1px dashed rgba(255,255,255,0.1);">
-                    <div style="color: var(--text-muted); font-size: 13px; margin-bottom: 4px;">Số dư khả dụng:</div>
-                    <span id="wd-bank-xu" style="color: var(--color-mint); font-weight: bold; font-size: 16px;">0</span> <span style="color: var(--color-mint); font-size: 14px;">Xu</span> 
-                    <span style="color: var(--text-muted); font-size: 13px;">(~<span id="wd-bank-vnd">0</span> VNĐ)</span>
-                </div>
-                
-                <input type="number" id="bank-amount" class="input-field" placeholder="Số tiền rút (VNĐ) - VD: 5000">
-                <input type="text" id="bank-name" class="input-field" placeholder="Tên Ngân Hàng (VD: MBBank)">
-                <input type="number" id="bank-stk" class="input-field" placeholder="Số tài khoản">
-                <input type="text" id="bank-fullname" class="input-field" placeholder="Họ và Tên (Không dấu)">
-                
-                <button id="btn-submit-bank" class="btn-primary" style="margin-top: 10px; background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);"><i class="fa-solid fa-paper-plane"></i> GỬI LỆNH RÚT</button>
-            </div>
-
-            <div class="card" id="wd-form-momo" style="display: none;">
-                <div style="margin-bottom: 20px;">
-                    <div style="text-align: left; margin-bottom: 15px;">
-                        <button class="btn-back-wd" style="width: auto; padding: 6px 12px; font-size: 13px; background: rgba(255,255,255,0.1); border-radius: 8px;"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+                    <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 20px; border: 1px dashed rgba(255,255,255,0.1);">
+                        <div style="color: var(--text-muted); font-size: 13px; margin-bottom: 4px;">Số dư khả dụng:</div>
+                        <span id="wd-bank-xu" style="color: var(--color-mint); font-weight: bold; font-size: 16px;">0</span> <span style="color: var(--color-mint); font-size: 14px;">Xu</span> 
+                        <span style="color: var(--text-muted); font-size: 13px;">(~<span id="wd-bank-vnd">0</span> VNĐ)</span>
                     </div>
-                    <h3 style="margin-bottom: 0; color: #d946ef; justify-content: center;"><i class="fa-solid fa-wallet"></i> RÚT VÍ MOMO</h3>
+                    
+                    <input type="number" id="bank-amount" class="input-field" placeholder="Số tiền rút (VNĐ) - VD: 5000">
+                    
+                    <div id="saved-bank-info" style="display: none; background: rgba(52, 211, 153, 0.1); padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid rgba(52, 211, 153, 0.3);">
+                        <div style="color: var(--text-muted); font-size: 12px; margin-bottom: 4px;">Tài khoản nhận tiền:</div>
+                        <div id="saved-bank-text" style="color: var(--color-mint); font-weight: 600; font-size: 14px;"></div>
+                    </div>
+
+                    <div id="bank-inputs">
+                        <input type="text" id="bank-name" class="input-field" placeholder="Tên Ngân Hàng (VD: MBBank)">
+                        <input type="number" id="bank-stk" class="input-field" placeholder="Số tài khoản">
+                        <input type="text" id="bank-fullname" class="input-field" placeholder="Họ và Tên (Không dấu)">
+                    </div>
+                    
+                    <button id="btn-submit-bank" class="btn-primary" style="margin-top: 10px; background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);"><i class="fa-solid fa-paper-plane"></i> GỬI LỆNH RÚT</button>
                 </div>
 
-                <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 20px; border: 1px dashed rgba(255,255,255,0.1);">
-                    <div style="color: var(--text-muted); font-size: 13px; margin-bottom: 4px;">Số dư khả dụng:</div>
-                    <span id="wd-momo-xu" style="color: var(--color-mint); font-weight: bold; font-size: 16px;">0</span> <span style="color: var(--color-mint); font-size: 14px;">Xu</span> 
-                    <span style="color: var(--text-muted); font-size: 13px;">(~<span id="wd-momo-vnd">0</span> VNĐ)</span>
+                <div class="card" id="wd-form-momo" style="display: none;">
+                    <div style="margin-bottom: 20px;">
+                        <div style="text-align: left; margin-bottom: 15px;">
+                            <button class="btn-back-wd" style="width: auto; padding: 6px 12px; font-size: 13px; background: rgba(255,255,255,0.1); border-radius: 8px;"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+                        </div>
+                        <h3 style="margin-bottom: 0; color: #d946ef; justify-content: center;"><i class="fa-solid fa-wallet"></i> RÚT VÍ MOMO</h3>
+                    </div>
+
+                    <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 20px; border: 1px dashed rgba(255,255,255,0.1);">
+                        <div style="color: var(--text-muted); font-size: 13px; margin-bottom: 4px;">Số dư khả dụng:</div>
+                        <span id="wd-momo-xu" style="color: var(--color-mint); font-weight: bold; font-size: 16px;">0</span> <span style="color: var(--color-mint); font-size: 14px;">Xu</span> 
+                        <span style="color: var(--text-muted); font-size: 13px;">(~<span id="wd-momo-vnd">0</span> VNĐ)</span>
+                    </div>
+
+                    <input type="number" id="momo-amount" class="input-field" placeholder="Số tiền rút (VNĐ) - VD: 5000">
+                    
+                    <div id="saved-momo-info" style="display: none; background: rgba(217, 70, 239, 0.1); padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid rgba(217, 70, 239, 0.3);">
+                        <div style="color: var(--text-muted); font-size: 12px; margin-bottom: 4px;">Ví nhận tiền:</div>
+                        <div id="saved-momo-text" style="color: #d946ef; font-weight: 600; font-size: 14px;"></div>
+                    </div>
+
+                    <div id="momo-inputs">
+                        <input type="number" id="momo-phone" class="input-field" placeholder="Số điện thoại Momo">
+                        <input type="text" id="momo-fullname" class="input-field" placeholder="Họ và Tên (Không dấu)">
+                    </div>
+                    
+                    <button id="btn-submit-momo" class="btn-pink" style="margin-top: 10px; background: linear-gradient(135deg, #d946ef 0%, #a21caf 100%);"><i class="fa-solid fa-paper-plane"></i> GỬI LỆNH RÚT</button>
                 </div>
-                
-                <input type="number" id="momo-amount" class="input-field" placeholder="Số tiền rút (VNĐ) - VD: 5000">
-                <input type="number" id="momo-phone" class="input-field" placeholder="Số điện thoại Momo">
-                <input type="text" id="momo-fullname" class="input-field" placeholder="Họ và Tên (Không dấu)">
-                
-                <button id="btn-submit-momo" class="btn-pink" style="margin-top: 10px; background: linear-gradient(135deg, #d946ef 0%, #a21caf 100%);"><i class="fa-solid fa-paper-plane"></i> GỬI LỆNH RÚT</button>
             </div>
         </div>
 
