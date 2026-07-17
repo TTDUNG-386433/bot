@@ -53,8 +53,10 @@ function checkLevelUp(exp, exp_required, level) {
     }
 
     if (exp >= exp_required) {
-        let xuNeeded = level * 15000;
-        costAlert.innerText = `💡 Điều kiện mở khóa hoàn tất! Phí lên Cấp ${level + 1}: 💰 ${xuNeeded.toLocaleString()} Xu.`;
+        let xuNeeded = Math.floor(20000 * Math.pow(1.30, level - 1));
+        let linksNeeded = level * 5;
+        
+        costAlert.innerHTML = `💡 Đã đủ EXP! Để lên Cấp ${level + 1} cần:<br>💰 <b>${xuNeeded.toLocaleString()} Xu</b> và 🔗 <b>${linksNeeded} Link nhiệm vụ</b>.`;
         costAlert.style.display = "block";
         btnUpgrade.style.display = "block";
         document.getElementById("next-level-display").innerText = level + 1;
@@ -492,6 +494,7 @@ if (watchAdBtn) {
                     const levelText = document.getElementById("user-level").innerText;
                     if (!levelText.includes("20") && !levelText.includes("MAX")) {
                         document.getElementById("user-exp").innerText = `${data.new_exp}/${data.exp_required}`;
+                        checkLevelUp(data.new_exp, data.exp_required, currentLevel);
                     }
                     
                     let adCount = data.ad_count || 0;
@@ -562,6 +565,7 @@ if (watchAdBtn2) {
                         const levelText = document.getElementById("user-level").innerText;
                         if (!levelText.includes("20") && !levelText.includes("MAX")) {
                             document.getElementById("user-exp").innerText = `${data.new_exp}/${data.exp_required}`;
+                            checkLevelUp(data.new_exp, data.exp_required, currentLevel);
                         }
                         
                         userAdsWatched2 = data.ad_count || 0; 
@@ -739,6 +743,7 @@ if (btnSpin) {
                     const lvl = document.getElementById("user-level").innerText;
                     if(!lvl.includes("20") && !lvl.includes("MAX")) {
                         document.getElementById("user-exp").innerText = `${d.new_exp}/${d.exp_required}`;
+                        checkLevelUp(d.new_exp, d.exp_required, currentLevel);
                     }
                 }, 4000);
             }
@@ -915,6 +920,7 @@ if (btnDoAttendance) {
                     const lvl = document.getElementById("user-level").innerText;
                     if(!lvl.includes("20") && !lvl.includes("MAX")) {
                         document.getElementById("user-exp").innerText = `${d.new_exp}/${d.exp_required}`;
+                        checkLevelUp(d.new_exp, d.exp_required, currentLevel);
                     }
 
                     if (d.is_weekly) {
@@ -1329,6 +1335,7 @@ if (btnClaimWeekly) {
                     const lvl = document.getElementById("user-level").innerText;
                     if(!lvl.includes("20") && !lvl.includes("MAX")) {
                         document.getElementById("user-exp").innerText = `${d.new_exp}/${d.exp_required}`;
+                        checkLevelUp(d.new_exp, d.exp_required, currentLevel);
                     }
                     
                     showToast(`🎉 CHÚC MỪNG! Mở rương thành công, nhận ${d.reward_xu.toLocaleString()} Xu & ${d.reward_exp} EXP!`);
@@ -1416,6 +1423,7 @@ if (btnSubmitGiftcode) {
                     const lvl = document.getElementById("user-level").innerText;
                     if(!lvl.includes("20") && !lvl.includes("MAX")) {
                         document.getElementById("user-exp").innerText = `${d.new_exp}/${d.exp_required}`;
+                        checkLevelUp(d.new_exp || data.user.exp, d.exp_required || data.user.exp_required, currentLevel);
                     }
                     
                     let rewards = [];
