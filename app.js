@@ -379,7 +379,8 @@ function resetUtilsMenu() {
         "inline-leaderboard-container",
         "inline-invite-container",
         "inline-giftcode-container",
-        "inline-inventory-container"
+        "inline-inventory-container",
+        "inline-history-container"
     ];
     
     subContainers.forEach(id => {
@@ -1607,4 +1608,58 @@ async function startTaskAndOpen(taskId, url) {
         console.log("Lỗi start task");
     }
     tg.openLink(url);
+}
+
+const btnHistory = document.getElementById("btn-history");
+const inlineHistoryContainer = document.getElementById("inline-history-container");
+const btnBackHistory = document.getElementById("btn-back-history");
+const historyList = document.getElementById("income-history-list");
+
+if (btnHistory) {
+    btnHistory.addEventListener("click", async () => {
+        document.getElementById("utils-buttons-container").style.display = "none";
+        inlineHistoryContainer.style.display = "block";
+        historyList.innerHTML = `<li style="justify-content: center; color: var(--text-muted); border: none;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu...</li>`;
+        
+        try {
+            const res = await fetch(`${BASE_URL}/api/history`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', "ngrok-skip-browser-warning": "true" },
+                body: JSON.stringify({ initData: tg.initData })
+            });
+            const d = await res.json();
+            
+            if (d.success) {
+                historyList.innerHTML = "";
+                if (d.history.length === 0) {
+                    historyList.innerHTML = `<li style="justify-content: center; color: var(--text-muted); border: none;">Chưa có giao dịch nào.</li>`;
+                } else {
+                    d.history.forEach(item => {
+                        let icon = item.xu > 0 ? '<i class="fa-solid fa-arrow-trend-up" style="color: var(--color-mint);"></i>' : '<i class="fa-solid fa-arrow-trend-down" style="color: #f43f5e;"></i>';
+                        historyList.innerHTML += `
+                            <li style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed rgba(255,255,255,0.1);">
+                                <div style="display: flex; flex-direction: column;">
+                                    <span style="color: var(--text-main); font-weight: bold; font-size: 14px;">${item.action}</span>
+                                    <span style="color: var(--text-muted); font-size: 11px;">${item.date}</span>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 14px; font-weight: bold; color: ${item.xu > 0 ? 'var(--color-mint)' : '#f43f5e'};">${item.xu > 0 ? '+' : ''}${item.xu.toLocaleString()} Xu</div>
+                                    <div style="font-size: 11px; color: var(--color-gold);">${item.exp > 0 ? '+' : ''}${item.exp} EXP</div>
+                                </div>
+                            </li>
+                        `;
+                    });
+                }
+            }
+        } catch (err) {
+            historyList.innerHTML = `<li style="justify-content: center; color: #f43f5e; border: none;">Lỗi kết nối máy chủ!</li>`;
+        }
+    });
+}
+
+if (btnBackHistory) {
+    btnBackHistory.addEventListener("click", () => {
+        inlineHistoryContainer.style.display = "none";
+        document.getElementById("utils-buttons-container").style.display = "block";
+    });
 }

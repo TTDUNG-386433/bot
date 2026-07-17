@@ -91,6 +91,7 @@
                     <div class="grid-buttons">
                         <button id="btn-lucky-wheel" class="btn-purple"><i class="fa-solid fa-ferris-wheel fa-spin-slow"></i> VÒNG QUAY</button>
                         <button id="btn-leaderboard" class="btn-gold"><i class="fa-solid fa-trophy"></i> BẢNG XẾP HẠNG</button>
+                        <button id="btn-history" class="btn-primary" style="grid-column: span 2;"><i class="fa-solid fa-clock-rotate-left"></i> LỊCH SỬ THU NHẬP</button>
                     </div>
                     <button id="btn-daily-attendance" class="btn-pink" style="margin-top: 12px;"><i class="fa-solid fa-calendar-check"></i> 📅 ĐIỂM DANH HẰNG NGÀY</button>
                     <button id="btn-open-inventory" class="btn-purple" style="margin-top: 12px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);"><i class="fa-solid fa-box-open"></i> 📦 KHO VẬT PHẨM COIN</button>
@@ -293,6 +294,20 @@
                     <button id="btn-submit-giftcode" class="btn-primary" style="background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%); font-size: 16px;">
                         <i class="fa-solid fa-check-circle"></i> XÁC NHẬN MÃ
                     </button>
+                </div>
+                <div id="inline-history-container" style="display: none; text-align: center;">
+                    <div style="margin-bottom: 25px;">
+                        <div style="text-align: left; margin-bottom: 15px;">
+                            <button id="btn-back-history" style="width: auto; padding: 6px 12px; font-size: 13px; background: rgba(255,255,255,0.1); border-radius: 8px; box-shadow: none;"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+                        </div>
+                        <h3 style="margin-bottom: 0; color: #38bdf8; justify-content: center;"><i class="fa-solid fa-clock-rotate-left"></i> LỊCH SỬ THU NHẬP</h3>
+                    </div>
+                    
+                    <div style="text-align: left;">
+                        <ul id="income-history-list" class="info-list" style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 15px; border: 1px solid rgba(255,255,255,0.08); max-height: 350px; overflow-y: auto;">
+                            <li style="justify-content: center; color: var(--text-muted); border: none;">Đang tải...</li>
+                        </ul>
+                    </div>
                 </div>
                 <div id="inline-inventory-container" style="display: none; text-align: center;">
                     <div style="margin-bottom: 20px;">
