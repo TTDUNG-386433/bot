@@ -1597,5 +1597,14 @@ function startBuffTimer(endTimeStr) {
 }
 
 async function startTaskAndOpen(taskId, url) {
+    try {
+        await fetch(`${BASE_URL}/api/start_task`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', "ngrok-skip-browser-warning": "true" },
+            body: JSON.stringify({ initData: tg.initData, task_id: taskId })
+        });
+    } catch(e) {
+        console.log("Lỗi start task");
+    }
     tg.openLink(url);
 }
